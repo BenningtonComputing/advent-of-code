@@ -1,6 +1,6 @@
 //
 // Created by stacychoco on 7/27/20.
-// Solution of puzzle 1 on day 1 of advent of code 2019.
+// Solution of day 1 of advent of code 2019.
 
 
 #include <iostream>
@@ -20,8 +20,13 @@ int main () {
 
     // reads file line by line
     while (modules_file >> mass) {
-        mass = floor(mass/3) - 2;
-        fuel = fuel + mass;
+        while (mass > 0) {
+            // floor() function rounds down a number
+            mass = floor(mass/3) - 2;
+            if (mass > 0) {
+                fuel = fuel + mass;
+            }
+        }
     }
 
     // closes file
