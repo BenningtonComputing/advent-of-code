@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/stacy.dir/day1/day1.cpp.o  -o stacy 
