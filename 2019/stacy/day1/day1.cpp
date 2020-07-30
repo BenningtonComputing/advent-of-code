@@ -6,19 +6,23 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
-using namespace std;
 
 int main () {
 
     // declaring doubles since floor() can only be used for doubles
-    double fuel;
+    double fuel = 0;
     double mass;
 
     // opens file
-    ifstream modules_file;
+    std::ifstream modules_file;
     modules_file.open("input.txt");
 
     // reads file line by line
+
+
+    // boolean expression in while-loop is true if the stream
+    // is ready for more operations and false if the end
+    // of the file has been reached
     while (modules_file >> mass) {
         while (mass > 0) {
             // floor() function rounds down a number
@@ -35,7 +39,7 @@ int main () {
     // round fuel and cast it to int
     int rounded_fuel = (int)round(fuel);
     // prints out amount of fuel needed
-    cout << rounded_fuel;
+    std::cout << rounded_fuel;
 
     return 0;
 

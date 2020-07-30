@@ -3,3 +3,5 @@
 
 CMakeFiles/stacy.dir/day1/day1.cpp.o: ../day1/day1.cpp
 
+CMakeFiles/stacy.dir/day2/day2.cpp.o: ../day2/day2.cpp
+

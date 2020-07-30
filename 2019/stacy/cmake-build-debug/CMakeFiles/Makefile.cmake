@@ -48,5 +48,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/stacy.dir/DependInfo.cmake"
+  "CMakeFiles/day2-1.dir/DependInfo.cmake"
+  "CMakeFiles/day1.dir/DependInfo.cmake"
+  "CMakeFiles/day2-2.dir/DependInfo.cmake"
   )
