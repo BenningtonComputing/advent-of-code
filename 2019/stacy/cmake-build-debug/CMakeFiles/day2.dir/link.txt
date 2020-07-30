@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/day2.dir/day2/day2-2.cpp.o CMakeFiles/day2.dir/day2/helper.cpp.o  -o day2 

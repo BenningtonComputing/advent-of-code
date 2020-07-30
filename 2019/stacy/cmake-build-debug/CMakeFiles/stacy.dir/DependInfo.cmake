@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/stacychoco/advent-of-code/2019/stacy/day1/day1.cpp" "/home/stacychoco/advent-of-code/2019/stacy/cmake-build-debug/CMakeFiles/stacy.dir/day1/day1.cpp.o"
+  "/home/stacychoco/advent-of-code/2019/stacy/day2/day2.cpp" "/home/stacychoco/advent-of-code/2019/stacy/cmake-build-debug/CMakeFiles/stacy.dir/day2/day2.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
