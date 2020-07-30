@@ -27,7 +27,7 @@ int main(){
             // runs "program" with for-loop
             for (int i = 0; i < vec_size; i += 4) {
                 if (v[i] == 99) {
-                    break;
+                    goto end_of_test1;
                 }
 
                 else if (v[i] == 1) {
@@ -40,18 +40,19 @@ int main(){
 
                 else {
                     cout << "error! \n";
-                    goto end_of_test;
+                    goto end_of_test2;
                 }
 
             }
 
+            end_of_test1:
             if (v[0] == 19690720) {
                 cout << "the result is: " << 100 * x + y << endl;
                 goto the_end;
             }
 
             // reset v
-            end_of_test:
+            end_of_test2:
             v = v_copy;
 
         }

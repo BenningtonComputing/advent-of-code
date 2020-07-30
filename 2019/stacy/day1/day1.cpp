@@ -1,6 +1,7 @@
 //
 // Created by stacychoco on 7/27/20.
-// Solution of day 1 of advent of code 2019.
+// This is the solution of day 1, part 2 of advent of code 2019.
+// Part 2 is basically adding to the code of part 1, so I didn't make a separate file here.
 
 
 #include <iostream>
@@ -27,6 +28,7 @@ int main () {
         while (mass > 0) {
             // floor() function rounds down a number
             mass = floor(mass/3) - 2;
+
             if (mass > 0) {
                 fuel = fuel + mass;
             }

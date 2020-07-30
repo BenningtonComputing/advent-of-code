@@ -22,7 +22,7 @@ int main(){
     // runs "program" with for-loop
     for (int i = 0; i < vec_size; i += 4) {
         if (v[i] == 99) {
-            break;
+            goto end;
         }
 
         else if (v[i] == 1) {
@@ -35,10 +35,11 @@ int main(){
 
         else {
             cout << "error! \n";
-            break;
+            goto end;
         }
     }
 
+    end:
     cout << "the value left at position 0 is: " << v[0];
 }
 
