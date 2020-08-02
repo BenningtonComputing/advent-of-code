@@ -23,6 +23,21 @@ impl Input {
 }
 
 pub fn run(input: Input) -> Result<(), Box<dyn std::error::Error>> {
+    /*
+     * RefCell<Rc<RefCell<Planet>>>
+     * the purpose of this hashmap is to track the name and planets
+     * each planet in itself has a pointer to the planet it is orbitting
+     * therefore, we need to let planets point to other planets in the same hashmap
+     *
+     * the first refcell is to allow borrowing of hashmap's values mutably and immutably
+     * at the same time, for mutating the pointers in one value to point to another value
+     *
+     * the second rc is to allow a planet to have multiple pointers pointing towards it. this
+     * implies a planet being orbitted by multiple other planets
+     *
+     * the third refcell is to allow the mutation of the data within the rc, since you cannot
+     * mutate value within rc without implementing the DerefTrait first
+     */
     let mut planet_list:HashMap<&str, RefCell<Rc<RefCell<Planet>>>> = HashMap::new();
     for line in input.raw_input.lines() {
         //parsing line
