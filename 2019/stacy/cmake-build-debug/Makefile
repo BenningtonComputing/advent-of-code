@@ -76,17 +76,6 @@ CMAKE_BINARY_DIR = /home/stacychoco/advent-of-code/2019/stacy/cmake-build-debug
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/snap/clion/123/bin/cmake/linux/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -97,6 +86,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/snap/clion/123/bin/cmake/linux/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -129,6 +129,19 @@ preinstall/fast:
 depend:
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
+
+#=============================================================================
+# Target rules for targets named day3-2
+
+# Build rule for target.
+day3-2: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 day3-2
+.PHONY : day3-2
+
+# fast build rule for target.
+day3-2/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-2.dir/build.make CMakeFiles/day3-2.dir/build
+.PHONY : day3-2/fast
 
 #=============================================================================
 # Target rules for targets named day2-1
@@ -168,6 +181,19 @@ day2-2: cmake_check_build_system
 day2-2/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/day2-2.dir/build.make CMakeFiles/day2-2.dir/build
 .PHONY : day2-2/fast
+
+#=============================================================================
+# Target rules for targets named day3-1
+
+# Build rule for target.
+day3-1: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 day3-1
+.PHONY : day3-1
+
+# fast build rule for target.
+day3-1/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-1.dir/build.make CMakeFiles/day3-1.dir/build
+.PHONY : day3-1/fast
 
 day1/day1.o: day1/day1.cpp.o
 
@@ -280,6 +306,93 @@ day2/helper.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/day2-2.dir/build.make CMakeFiles/day2-2.dir/day2/helper.cpp.s
 .PHONY : day2/helper.cpp.s
 
+day3/day3-1.o: day3/day3-1.cpp.o
+
+.PHONY : day3/day3-1.o
+
+# target to build an object file
+day3/day3-1.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day1.dir/build.make CMakeFiles/day1.dir/day3/day3-1.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-1.dir/build.make CMakeFiles/day3-1.dir/day3/day3-1.cpp.o
+.PHONY : day3/day3-1.cpp.o
+
+day3/day3-1.i: day3/day3-1.cpp.i
+
+.PHONY : day3/day3-1.i
+
+# target to preprocess a source file
+day3/day3-1.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day1.dir/build.make CMakeFiles/day1.dir/day3/day3-1.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-1.dir/build.make CMakeFiles/day3-1.dir/day3/day3-1.cpp.i
+.PHONY : day3/day3-1.cpp.i
+
+day3/day3-1.s: day3/day3-1.cpp.s
+
+.PHONY : day3/day3-1.s
+
+# target to generate assembly for a file
+day3/day3-1.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day1.dir/build.make CMakeFiles/day1.dir/day3/day3-1.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-1.dir/build.make CMakeFiles/day3-1.dir/day3/day3-1.cpp.s
+.PHONY : day3/day3-1.cpp.s
+
+day3/day3-2.o: day3/day3-2.cpp.o
+
+.PHONY : day3/day3-2.o
+
+# target to build an object file
+day3/day3-2.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-2.dir/build.make CMakeFiles/day3-2.dir/day3/day3-2.cpp.o
+.PHONY : day3/day3-2.cpp.o
+
+day3/day3-2.i: day3/day3-2.cpp.i
+
+.PHONY : day3/day3-2.i
+
+# target to preprocess a source file
+day3/day3-2.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-2.dir/build.make CMakeFiles/day3-2.dir/day3/day3-2.cpp.i
+.PHONY : day3/day3-2.cpp.i
+
+day3/day3-2.s: day3/day3-2.cpp.s
+
+.PHONY : day3/day3-2.s
+
+# target to generate assembly for a file
+day3/day3-2.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-2.dir/build.make CMakeFiles/day3-2.dir/day3/day3-2.cpp.s
+.PHONY : day3/day3-2.cpp.s
+
+day3/helper.o: day3/helper.cpp.o
+
+.PHONY : day3/helper.o
+
+# target to build an object file
+day3/helper.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-2.dir/build.make CMakeFiles/day3-2.dir/day3/helper.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-1.dir/build.make CMakeFiles/day3-1.dir/day3/helper.cpp.o
+.PHONY : day3/helper.cpp.o
+
+day3/helper.i: day3/helper.cpp.i
+
+.PHONY : day3/helper.i
+
+# target to preprocess a source file
+day3/helper.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-2.dir/build.make CMakeFiles/day3-2.dir/day3/helper.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-1.dir/build.make CMakeFiles/day3-1.dir/day3/helper.cpp.i
+.PHONY : day3/helper.cpp.i
+
+day3/helper.s: day3/helper.cpp.s
+
+.PHONY : day3/helper.s
+
+# target to generate assembly for a file
+day3/helper.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-2.dir/build.make CMakeFiles/day3-2.dir/day3/helper.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-1.dir/build.make CMakeFiles/day3-1.dir/day3/helper.cpp.s
+.PHONY : day3/helper.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -291,6 +404,8 @@ help:
 	@echo "... day1"
 	@echo "... day2-1"
 	@echo "... day2-2"
+	@echo "... day3-1"
+	@echo "... day3-2"
 	@echo "... day1/day1.o"
 	@echo "... day1/day1.i"
 	@echo "... day1/day1.s"
@@ -303,6 +418,15 @@ help:
 	@echo "... day2/helper.o"
 	@echo "... day2/helper.i"
 	@echo "... day2/helper.s"
+	@echo "... day3/day3-1.o"
+	@echo "... day3/day3-1.i"
+	@echo "... day3/day3-1.s"
+	@echo "... day3/day3-2.o"
+	@echo "... day3/day3-2.i"
+	@echo "... day3/day3-2.s"
+	@echo "... day3/helper.o"
+	@echo "... day3/helper.i"
+	@echo "... day3/helper.s"
 .PHONY : help
 
 
