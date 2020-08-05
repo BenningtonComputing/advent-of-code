@@ -25,3 +25,6 @@ add_executable(day3-1
 add_executable(day3-2
         day3/day3-2.cpp
         day3/input.txt day3/helper.cpp day3/helper.h day3/inputtest.txt day3/day3-2.cpp)
+
+add_executable(day4
+        day4/day4.cpp)

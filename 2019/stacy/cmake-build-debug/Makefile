@@ -144,6 +144,19 @@ day3-2/fast:
 .PHONY : day3-2/fast
 
 #=============================================================================
+# Target rules for targets named day4
+
+# Build rule for target.
+day4: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 day4
+.PHONY : day4
+
+# fast build rule for target.
+day4/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day4.dir/build.make CMakeFiles/day4.dir/build
+.PHONY : day4/fast
+
+#=============================================================================
 # Target rules for targets named day2-1
 
 # Build rule for target.
@@ -393,6 +406,33 @@ day3/helper.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-1.dir/build.make CMakeFiles/day3-1.dir/day3/helper.cpp.s
 .PHONY : day3/helper.cpp.s
 
+day4/day4.o: day4/day4.cpp.o
+
+.PHONY : day4/day4.o
+
+# target to build an object file
+day4/day4.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day4.dir/build.make CMakeFiles/day4.dir/day4/day4.cpp.o
+.PHONY : day4/day4.cpp.o
+
+day4/day4.i: day4/day4.cpp.i
+
+.PHONY : day4/day4.i
+
+# target to preprocess a source file
+day4/day4.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day4.dir/build.make CMakeFiles/day4.dir/day4/day4.cpp.i
+.PHONY : day4/day4.cpp.i
+
+day4/day4.s: day4/day4.cpp.s
+
+.PHONY : day4/day4.s
+
+# target to generate assembly for a file
+day4/day4.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day4.dir/build.make CMakeFiles/day4.dir/day4/day4.cpp.s
+.PHONY : day4/day4.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -406,6 +446,7 @@ help:
 	@echo "... day2-2"
 	@echo "... day3-1"
 	@echo "... day3-2"
+	@echo "... day4"
 	@echo "... day1/day1.o"
 	@echo "... day1/day1.i"
 	@echo "... day1/day1.s"
@@ -427,6 +468,9 @@ help:
 	@echo "... day3/helper.o"
 	@echo "... day3/helper.i"
 	@echo "... day3/helper.s"
+	@echo "... day4/day4.o"
+	@echo "... day4/day4.i"
+	@echo "... day4/day4.s"
 .PHONY : help
 
 
