@@ -8,7 +8,7 @@ using namespace std;
 int main() {
 
     bool same_adjacent_digits = false;
-    bool never_decrease = false;
+    bool never_decrease = true;
     int count = 0;
 
     for (int i = 264793; i <= 803935; i++) {
@@ -16,30 +16,19 @@ int main() {
         int size = static_cast<int>(password.size());
         for (int a = 0; a < size - 1; a++) {
             if (password[a] == password[a+1]) {
-                same_adjacent_digits = true;
+                if (password[a] != password[a-1] && password[a] != password[a+2]) {
+                    same_adjacent_digits = true;
+                }
             }
-            for (int b = a + 1; b < size; b++) {
-                if (password[a] < password[b] || password[a] == password[b]) {
-                    if (b == size - 1) {
-                        if (password[b] < password[0]) {
-                            never_decrease = true;
-                        }
-                    }
-                    else {
-                        never_decrease = true;
-                    }
-                }
-                else {
-                    goto loop_reset;
-                }
+            if (password[a] > password[a+1]) {
+                never_decrease = false;
             }
         }
         if (same_adjacent_digits && never_decrease) {
             count++;
         }
-        loop_reset:
         same_adjacent_digits = false;
-        never_decrease = false;
+        never_decrease = true;
     }
 
     cout << "The number of passwords that meet these criteria are: " << count;

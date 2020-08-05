@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/day4.dir/day4/day4.cpp.o  -o day4 

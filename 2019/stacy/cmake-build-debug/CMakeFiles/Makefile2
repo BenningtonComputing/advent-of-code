@@ -74,6 +74,7 @@ CMAKE_BINARY_DIR = /home/stacychoco/advent-of-code/2019/stacy/cmake-build-debug
 
 # The main recursive "all" target.
 all: CMakeFiles/day3-2.dir/all
+all: CMakeFiles/day4.dir/all
 all: CMakeFiles/day2-1.dir/all
 all: CMakeFiles/day1.dir/all
 all: CMakeFiles/day2-2.dir/all
@@ -88,6 +89,7 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/day3-2.dir/clean
+clean: CMakeFiles/day4.dir/clean
 clean: CMakeFiles/day2-1.dir/clean
 clean: CMakeFiles/day1.dir/clean
 clean: CMakeFiles/day2-2.dir/clean
@@ -121,6 +123,33 @@ day3-2: CMakeFiles/day3-2.dir/rule
 CMakeFiles/day3-2.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-2.dir/build.make CMakeFiles/day3-2.dir/clean
 .PHONY : CMakeFiles/day3-2.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/day4.dir
+
+# All Build rule for target.
+CMakeFiles/day4.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day4.dir/build.make CMakeFiles/day4.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day4.dir/build.make CMakeFiles/day4.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/stacychoco/advent-of-code/2019/stacy/cmake-build-debug/CMakeFiles --progress-num=16,17 "Built target day4"
+.PHONY : CMakeFiles/day4.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/day4.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/stacychoco/advent-of-code/2019/stacy/cmake-build-debug/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/day4.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/stacychoco/advent-of-code/2019/stacy/cmake-build-debug/CMakeFiles 0
+.PHONY : CMakeFiles/day4.dir/rule
+
+# Convenience name for target.
+day4: CMakeFiles/day4.dir/rule
+
+.PHONY : day4
+
+# clean rule for target.
+CMakeFiles/day4.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day4.dir/build.make CMakeFiles/day4.dir/clean
+.PHONY : CMakeFiles/day4.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/day2-1.dir
