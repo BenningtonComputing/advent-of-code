@@ -1,44 +1,120 @@
 extern crate digits_iterator;
 use digits_iterator::*;
-use std::env;
+
+use std::collections::HashSet;
+use std::collections::HashMap;
+use std::{thread, time};
+
 use std::fs;
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    //parsing input
-    let mut args = env::args();
-    args.next();
+pub struct Input {
+    raw_input: String,
+}
 
-    //parsing input and converting to a vector
-    let mut raw_input = fs::read_to_string(args.next().unwrap()).expect("Unable to read file");
-    raw_input.pop(); //remove trailing newline
-    let mut program_instr: Vec<i64> = raw_input
+impl Input {
+    pub fn new(mut args: std::env::Args) -> Result<Input, &'static str> {
+        if args.len() < 2 {
+            return Err("not enough arguments");
+        }
+
+        args.next();
+        let filename = args.next().expect("File not found.");
+        let raw_input = fs::read_to_string(filename).expect("Error opening file");
+
+        Ok(Input { raw_input })
+    }
+}
+
+pub fn run(input: Input) -> Result<(), Box<dyn std::error::Error>> {
+    let mut raw_input = input.raw_input;
+    raw_input.pop();
+    let mut int_input: Vec<i64> = raw_input
         .split(",")
-        .map(|x| x.parse::<i64>().expect("Input failed"))
+        .map(|x| x.parse::<i64>().unwrap())
         .collect();
 
-    let run = intcode_comp(0, &mut program_instr, &vec![1]);
-    println!("{:?} {}", run, program_instr[run.curr_pos]);
+    let mut color_map = vec![vec![0;150];40];
+    let mut curr_x = 10;
+    let mut curr_y = 10;
+    /*let mut color_map = vec![vec![0;1000];1000];
+    let mut curr_x = 500;
+    let mut curr_y = 500;*/
+    color_map[curr_y][curr_x] = 1;
+    let mut face = 0; //starting facing angle
+    let mut visited_square: HashSet<(usize, usize)> = HashSet::new();
+    let mut state = IntcodeStatus {
+        status: IntcodeReturnStatus::WaitingInput,
+        curr_pos: 0,
+        relative_base: 0,
+        return_val: Vec::new(),
+    };
+    while state.status == IntcodeReturnStatus::WaitingInput {
+        state = intcode_comp(
+            state.curr_pos,
+            state.relative_base,
+            &mut int_input,
+            &vec![color_map[curr_y][curr_x]],
+            false,
+        );
 
+        //coloring color map
+        color_map[curr_y][curr_x] = state.return_val[0];
+        visited_square.insert((curr_x, curr_y));
+
+        //extending color map
+        if state.return_val[1] == 0 { //turn left
+            face -= 90;
+        } else {
+            face += 90;
+        }
+        if face < 0 { face += 360 }; //face could only be 0, 90, 180, 270
+        if face >= 360 { face -= 360 };
+
+        match face {
+            0 => {
+                curr_y -= 1;
+            },
+            90 => {
+                curr_x += 1;
+            },
+            180 => {
+                curr_y += 1;
+            },
+            270 => {
+                curr_x -= 1;
+            },
+            _ => panic!("Invalid angle: {}", face),
+        }
+
+        println!("{:?} {}", state, face);
+        for i in 0..color_map.len() {
+            for j in 0..color_map[0].len() {
+                if (i == curr_y) & (j == curr_x) {
+                    print!("*");
+                } else if color_map[i as usize][j as usize] == 0 {
+                    print!("_");
+                } else {
+                    print!("0");
+                }
+            }
+            println!();
+        }
+        println!();
+
+        //println!("{}", visited_square.len());
+        thread::sleep(time::Duration::from_millis(10));
+    }
+
+    println!("{}", visited_square.len());
     Ok(())
-}
-
-#[derive(Debug, Eq, PartialEq)]
-enum IntcodeReturnStatus {
-    Halted,
-    WaitingInput,
-}
-
-#[derive(Debug, Eq, PartialEq)]
-struct IntcodeStatus {
-    status: IntcodeReturnStatus,
-    curr_pos: usize,
-    return_val: Vec<i64>,
 }
 
 fn intcode_comp(
     mut curr_pos: usize,
+    mut relative_base: i64,
     int_input: &mut Vec<i64>,
     cpu_input: &Vec<i64>,
+    debug: bool,
 ) -> IntcodeStatus {
     //big memory init
     if int_input.len() < 10000 { int_input.extend(vec![0;10000].iter()) };
@@ -46,7 +122,9 @@ fn intcode_comp(
     let status: IntcodeReturnStatus;
     let mut curr_arg = 0;
     let mut output: Vec<i64> = Vec::new();
-    let mut relative_base = 0;
+    if debug {
+        println!("Input: {:?}", cpu_input);
+    }
     loop {
         if curr_pos > int_input.len() - 1 {
             panic!("vector index overflow at {}", curr_pos);
@@ -68,6 +146,16 @@ fn intcode_comp(
             param_vec.push(0);
         }
         let mut param_vec_iter = param_vec.iter();
+
+        //debugger
+        if debug {
+            println!("Curr_pos: {}", curr_pos);
+            println!("Opcode: {}", opcode);
+            println!("Param: {:?}", param_vec);
+            println!("Relative Base: {}", relative_base);
+            println!("Next: {} {} {}", int_input[curr_pos + 1], int_input[curr_pos + 2], int_input[curr_pos + 3]);
+            //thread::sleep(time::Duration::from_millis(10000));
+        }
 
         match opcode {
             1 | 2 => {
@@ -182,6 +270,7 @@ fn intcode_comp(
     IntcodeStatus {
         status,
         curr_pos,
+        relative_base,
         return_val: output,
     }
 }
@@ -194,4 +283,18 @@ fn param_get<'b>(param: &u8, int_input: &Vec<i64>, curr_pos: usize, relative_bas
         2 => (int_input[curr_pos] + relative_base) as usize,
         _ => panic!("Invalid param mode"),
     }
+}
+
+#[derive(Debug, Eq, PartialEq)]
+enum IntcodeReturnStatus {
+    Halted,
+    WaitingInput,
+}
+
+#[derive(Debug, Eq, PartialEq)]
+struct IntcodeStatus {
+    status: IntcodeReturnStatus,
+    curr_pos: usize,
+    relative_base: i64,
+    return_val: Vec<i64>,
 }
