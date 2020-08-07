@@ -1,1 +1,1 @@
-/usr/bin/c++  -g   CMakeFiles/day1.dir/day1/day1.cpp.o CMakeFiles/day1.dir/day3/day3-1.cpp.o  -o day1 
+/usr/bin/c++  -g   CMakeFiles/day1.dir/day1/day1.cpp.o  -o day1 

@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/stacychoco/advent-of-code/2019/stacy/day5/day5-1.cpp
+helper.h
+/home/stacychoco/advent-of-code/2019/stacy/day5/helper.h
+
+/home/stacychoco/advent-of-code/2019/stacy/day5/helper.h
+bits/stdc++.h
+-
+

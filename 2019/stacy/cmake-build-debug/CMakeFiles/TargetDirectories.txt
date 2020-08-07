@@ -1,5 +1,6 @@
 /home/stacychoco/advent-of-code/2019/stacy/cmake-build-debug/CMakeFiles/edit_cache.dir
 /home/stacychoco/advent-of-code/2019/stacy/cmake-build-debug/CMakeFiles/day3-2.dir
+/home/stacychoco/advent-of-code/2019/stacy/cmake-build-debug/CMakeFiles/day5-1.dir
 /home/stacychoco/advent-of-code/2019/stacy/cmake-build-debug/CMakeFiles/day4.dir
 /home/stacychoco/advent-of-code/2019/stacy/cmake-build-debug/CMakeFiles/day2-1.dir
 /home/stacychoco/advent-of-code/2019/stacy/cmake-build-debug/CMakeFiles/day1.dir

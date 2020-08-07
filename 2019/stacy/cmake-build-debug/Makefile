@@ -144,6 +144,19 @@ day3-2/fast:
 .PHONY : day3-2/fast
 
 #=============================================================================
+# Target rules for targets named day5-1
+
+# Build rule for target.
+day5-1: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 day5-1
+.PHONY : day5-1
+
+# fast build rule for target.
+day5-1/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day5-1.dir/build.make CMakeFiles/day5-1.dir/build
+.PHONY : day5-1/fast
+
+#=============================================================================
 # Target rules for targets named day4
 
 # Build rule for target.
@@ -325,7 +338,6 @@ day3/day3-1.o: day3/day3-1.cpp.o
 
 # target to build an object file
 day3/day3-1.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/day1.dir/build.make CMakeFiles/day1.dir/day3/day3-1.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-1.dir/build.make CMakeFiles/day3-1.dir/day3/day3-1.cpp.o
 .PHONY : day3/day3-1.cpp.o
 
@@ -335,7 +347,6 @@ day3/day3-1.i: day3/day3-1.cpp.i
 
 # target to preprocess a source file
 day3/day3-1.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/day1.dir/build.make CMakeFiles/day1.dir/day3/day3-1.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-1.dir/build.make CMakeFiles/day3-1.dir/day3/day3-1.cpp.i
 .PHONY : day3/day3-1.cpp.i
 
@@ -345,7 +356,6 @@ day3/day3-1.s: day3/day3-1.cpp.s
 
 # target to generate assembly for a file
 day3/day3-1.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/day1.dir/build.make CMakeFiles/day1.dir/day3/day3-1.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/day3-1.dir/build.make CMakeFiles/day3-1.dir/day3/day3-1.cpp.s
 .PHONY : day3/day3-1.cpp.s
 
@@ -433,6 +443,60 @@ day4/day4.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/day4.dir/build.make CMakeFiles/day4.dir/day4/day4.cpp.s
 .PHONY : day4/day4.cpp.s
 
+day5/day5-1.o: day5/day5-1.cpp.o
+
+.PHONY : day5/day5-1.o
+
+# target to build an object file
+day5/day5-1.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day5-1.dir/build.make CMakeFiles/day5-1.dir/day5/day5-1.cpp.o
+.PHONY : day5/day5-1.cpp.o
+
+day5/day5-1.i: day5/day5-1.cpp.i
+
+.PHONY : day5/day5-1.i
+
+# target to preprocess a source file
+day5/day5-1.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day5-1.dir/build.make CMakeFiles/day5-1.dir/day5/day5-1.cpp.i
+.PHONY : day5/day5-1.cpp.i
+
+day5/day5-1.s: day5/day5-1.cpp.s
+
+.PHONY : day5/day5-1.s
+
+# target to generate assembly for a file
+day5/day5-1.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day5-1.dir/build.make CMakeFiles/day5-1.dir/day5/day5-1.cpp.s
+.PHONY : day5/day5-1.cpp.s
+
+day5/helper.o: day5/helper.cpp.o
+
+.PHONY : day5/helper.o
+
+# target to build an object file
+day5/helper.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day5-1.dir/build.make CMakeFiles/day5-1.dir/day5/helper.cpp.o
+.PHONY : day5/helper.cpp.o
+
+day5/helper.i: day5/helper.cpp.i
+
+.PHONY : day5/helper.i
+
+# target to preprocess a source file
+day5/helper.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day5-1.dir/build.make CMakeFiles/day5-1.dir/day5/helper.cpp.i
+.PHONY : day5/helper.cpp.i
+
+day5/helper.s: day5/helper.cpp.s
+
+.PHONY : day5/helper.s
+
+# target to generate assembly for a file
+day5/helper.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/day5-1.dir/build.make CMakeFiles/day5-1.dir/day5/helper.cpp.s
+.PHONY : day5/helper.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -447,6 +511,7 @@ help:
 	@echo "... day3-1"
 	@echo "... day3-2"
 	@echo "... day4"
+	@echo "... day5-1"
 	@echo "... day1/day1.o"
 	@echo "... day1/day1.i"
 	@echo "... day1/day1.s"
@@ -471,6 +536,12 @@ help:
 	@echo "... day4/day4.o"
 	@echo "... day4/day4.i"
 	@echo "... day4/day4.s"
+	@echo "... day5/day5-1.o"
+	@echo "... day5/day5-1.i"
+	@echo "... day5/day5-1.s"
+	@echo "... day5/helper.o"
+	@echo "... day5/helper.i"
+	@echo "... day5/helper.s"
 .PHONY : help
 
 

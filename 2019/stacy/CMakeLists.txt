@@ -8,7 +8,7 @@ include_directories(day1)
 
 add_executable(day1
         day1/day1.cpp
-        day1/input.txt day3/day3-1.cpp)
+        day1/input.txt)
 
 add_executable(day2-1
         day2/day2-1.cpp
@@ -28,3 +28,7 @@ add_executable(day3-2
 
 add_executable(day4
         day4/day4.cpp)
+
+add_executable(day5-1
+        day5/day5-1.cpp
+        day5/input.txt day5/helper.cpp day5/helper.h)
