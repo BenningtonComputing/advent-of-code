@@ -1,44 +1,4 @@
-# utils.janet
-#
-# https://janet-lang.org/docs/index.html
-# http://www.unexpected-vortices.com/janet/notes-and-examples/index.html
-# https://github.com/MikeBeller/janet-cookbook
-#
-# In emacs :
-#    (1) visiting *.janet uses 
-#    (2) "M-x ijanet" launches interactive Ijanet repl window
-#
-# Examples:
-#
-#   $ janet
-#   repl> (import* "./utils" :prefix "")    # to import the functions in this file
-#   repl> (foo 3 4)
-#   7
-#
-#   repl> (import* "./utils")               # ... or need to preface with utils/
-#   repl> (utils/foo 3 4)
-#   7
-#
-#   repl> (var values (utils/file->ints "ints.txt"))
-#   @[1 2 3 4 5 6 7 8]
-#   repl> (seq [v :in values] (* 2 v))
-#   @[2 4 6 8 10 12 14 16]
-#
-#   repl> (scan-number "123")
-#   123
-#
-#   repl> (print [1 2 3])
-#   <tuple 0x...>
-#
-#   repl> (pp [1 2 3])   # also (printf "%j" [1 2 3])   # %j ... janet?
-#   (1 2 3)
-#
-#   repl> (string 123)
-#   "123"
-#
-# checkout these builtins : loop, seq, generate, accumulate, reduce, map, filter
-#
-
+" utils.janet "
 
 (defn foo "a function" [x y] (+ x y))
 
@@ -103,12 +63,19 @@
 (defn indeces "indeces of an array" [values] (range (length values)))
 (assert (array= (indeces [4 5 6]) [0 1 2]))
 
-(defn array/pairs [values]
+(defn array/pairs 
   " Given an array [1 2 3], return array of two 
     distinct elements [[1 2] [1 3] [2 1] [2 3] [3 1] [3 2] "
+  [values]
   (seq [x :in (indeces values)
 	y :in (indeces values)
 	:when (not (= x y))]
        [(values x) (values y)]))
 (assert (array= (array/pairs [1 2 3])
 		[[1 2] [1 3] [2 1] [2 3] [3 1] [3 2]]))
+
+(defn lines->numbers [lines]
+    (map parse                                   # string -> integer
+	 (filter (fn [x] (> (length x) 0))       # ignore ""
+		 (string/split "\n" lines))))
+
