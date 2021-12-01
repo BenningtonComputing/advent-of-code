@@ -10,7 +10,7 @@ Although solving the puzzles in as few lines as possible might prove
 too challenging...
 
 I'll probably play with learning Python more deeply for real
-after finals (if my interest still persists...)
+after finals (if my interest still persists!)
 
 """
 
