@@ -1,16 +1,14 @@
-# day1-2020.janet
-#
-# Warming up with the first puzzle from last year.
-#
-#  $ janet day1-2020.janet
-#  2020 Day 1 Part 1 : (a,b)=(321,1699) ; product is 545379.
-#
+"--- day1-2020.janet  -------------------------------------
+ Warming up with the first puzzle from last year.
+   $ janet day1-2020.janet
+   2020 Day 1 Part 1 : (a,b)=(321,1699) ; product is 545379. 
+-----------------------------------------------------------"
 (import* "../utils" :prefix "")       
 
 (def numbers "numbers from day1 2020, one per line"
   (map parse                                   # string -> integer
        (filter (fn [x] (> (length x) 0))       # ignore ""
-	       (string/split "\n" (slurp "../../2020/inputs/1.txt")))))
+	       (string/split "\n" (slurp "./input-day1-2020.txt")))))
 
 (defn find-total-pair
   " Return (a,b) where both are in list of values, and they sum to total "

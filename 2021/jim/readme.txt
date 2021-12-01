@@ -1,19 +1,32 @@
 Advent of Code 2021
 
-I'm first going to try out Janet (janet-lang.org),
-which I've installed with homebrew. (And I also
-installed the jpm package manager; see ~/system/history.txt.)
+Jim Mahoney | cs.bennington.college | Dec 2021 | MIT License |
+https://github.com/BenningtonComputing/advent-of-code/tree/master/2021/jim
 
-See 
+I'm first going to start out with the Janet programming language
+(janet-lang.org) - new to me but looks interesting.  out. I've
+installed it with homebrew, on macOS 11.6.1, along with its jpm
+package manager (see *bootstrap* below).
+
+ $ brew info janet
+ janet: stable 1.18.1 (bottled), HEAD
+ Dynamic language and bytecode vm
+ https://janet-lang.org
+ /usr/local/Cellar/janet/1.18.1 (145 files, 2.7MB) *
+ From: https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/janet.rb
+
+See :
+ * https://adventofcode.com/2021
  * https://janet-lang.org/docs/index.html
+ * https://janet-lang.org/docs/jpm.html (*bootstrap*)
  * http://www.unexpected-vortices.com/janet/notes-and-examples/index.html
  * https://github.com/MikeBeller/janet-cookbook
 
-In emacs :
- * visiting *.janet uses 
+I'll be using emacs and its janet tricks :
+ * visiting *.janet uses janet-mode (paren bouncing & highlighting)
  * "M-x ijanet" launches interactive Ijanet repl window
 
-Examples:
+Janet code examples :
 
   $ janet
   repl> (import* "./utils" :prefix "")    # to import these functions
