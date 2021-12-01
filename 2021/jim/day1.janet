@@ -2,15 +2,24 @@
 
   puzzle : https://adventofcode.com/2021/day/1
 
-  $ janet day1.janet
-  Day 1 Part 1 : 1266 increases.
-  Day 1 Part 2 : 1217 increases in sums of triples.
+    $ janet day1.janet
+    The input for day1 is 2000 integers: @[171 173 174 163 161] ...
+    Day 1 Part 1 : 1266 increases.
+    Day 1 Part 2 : 1217 increases in sums of triples.
 
-  Took me 30 min.
+  My personal leaderborad stats page at 
+  https://adventofcode.com/2021/leaderboard/self
+  says that it took me 13:13 and 30:23 to submit
+  the two parts, with ranks (how many people 
+  submitted correct answers before me) of 572 and 624.
+  
+  But who's counting, eh? 🤨
 -------------------------------------------------------"
 (import* "./utils" :prefix "")       
 
 (def day1 (lines->numbers (slurp-input 1)))
+(printf "The input for day1 is %j integers: %j ..."
+	(length day1) (array/slice day1 0 5))
 
 # -- part 1 ----------------
 
