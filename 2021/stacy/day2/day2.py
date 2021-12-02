@@ -26,7 +26,6 @@ def calculate_pos(input, has_aim=False):
     if command == 'forward':
       horizontal += value
       depth += aim * value
-
     elif command == 'down':
       aim += value
     elif command == 'up':
