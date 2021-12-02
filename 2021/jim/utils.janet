@@ -12,6 +12,8 @@
 (defn slurp-input "get input for day n" [n]
   (slurp (string/join ["./inputs/" (string n) ".txt"])))
 
+(defn lines [text] (string/split "\n" text))
+
 (defn string->ints
   "convert string of ints with space delimeter to array of integers"
   # Note that <scan-number> and <parse> do similar things, converting "1" to 1.
@@ -74,8 +76,11 @@
 (assert (array= (array/pairs [1 2 3])
 		[[1 2] [1 3] [2 1] [2 3] [3 1] [3 2]]))
 
-(defn lines->numbers [lines]
-    (map parse                                   # string -> integer
-	 (filter (fn [x] (> (length x) 0))       # ignore ""
-		 (string/split "\n" lines))))
+(defn text->lines
+  "return array of non-empty lines from text"
+  [text]
+  (filter (fn [x] (> (length x) 0))
+	  (string/split "\n" text)))
+
+(defn text->numbers [text] (map parse (text->lines text)))
 
