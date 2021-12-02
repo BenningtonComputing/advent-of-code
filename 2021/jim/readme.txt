@@ -4,9 +4,9 @@ Jim Mahoney | cs.bennington.college | Dec 2021 | MIT License |
 https://github.com/BenningtonComputing/advent-of-code/tree/master/2021/jim
 
 I'm first going to start out with the Janet programming language
-(janet-lang.org) - new to me but looks interesting.  out. I've
-installed it with homebrew, on macOS 11.6.1, along with its jpm
-package manager (see *bootstrap* below).
+(janet-lang.org) - new to me but looks interesting. I've installed it
+with homebrew, on macOS 11.6.1, along with its jpm package manager
+(see *bootstrap* below).
 
  $ brew info janet
  janet: stable 1.18.1 (bottled), HEAD
