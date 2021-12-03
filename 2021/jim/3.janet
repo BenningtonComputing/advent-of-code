@@ -35,6 +35,21 @@
     product for test-case is 198 (should be 198)
     Day 3 Part 1 is 3969000
 
+    oxy filter 0 is @["11110" "10110" "10111" "10101" "11100" "10000" "11001"]
+    oxy filter 1 is @["10110" "10111" "10101" "10000"]
+    oxy test-case is "10111"
+    life-support for test-case is 230
+    Day 3 Part 2 is 4267809
+
+I'm not particularly happy with my work on this one - the code feels
+too awkward.  Janet's versions of strings and bytes is hard to wrap my
+head around, without any character type. I should have converted the
+ascii 0's and 1's to numeric 0's and 1's early on; perhaps that would
+have made this feel cleaner.  And I hit a bug at the end in the logic
+of my code, where for "least common" I was choosing a value with
+frequency count of 0 (i.e. less than the other) and filtering out all
+the lines ... Oops.
+ 
 -------------------------------------------------------``
 (import* "./utils" :prefix "")       
 
@@ -135,9 +150,6 @@
 (printf "gamma-rate test-case is %s " (gamma-rate test-case))
 (printf "epsilon-rate test-case is %s " (epsilon-rate test-case))
 
-(defn reverse-bits [str]
-  (map (fn [x] (- x (chr "0"))) (reverse str)))
-
 (defn reverse-bits
   "convert e.g. '011' to [1 1 0] "
   # Note that (reverse "123") is @[51 50 49] i.e. ascii bytes.
@@ -165,6 +177,77 @@
 (print "Day 3 Part 1 is " (gamma-epsilon-product day3))
 (print)
 
+# -------------------------------------------------------------
 
+(defn oxy-filter
+  "return subset of numbers, lines whose column matches "
+  [numbers col]
+  (def this-column (column col numbers))
+  (def counts (frequencies this-column))
+  (var which -1)
+  (if (> (counts zero) (counts one))
+    (set which zero)
+    (set which one))
+  # don't choose a value which isn't there :
+  (if (not (counts zero)) (set which one))
+  (if (not (counts one)) (set which zero))
+  #(printf "   :::: oxyfilter counts=%j which=%j " counts which)
+  (filter (fn [number] (= which (number col))) numbers))
 
+(def oxy0 (oxy-filter test-case 0))
+(printf "oxy filter 0 is %j" oxy0)
+
+(def oxy1 (oxy-filter oxy0 1))
+(printf "oxy filter 1 is %j" oxy1)
+
+(defn oxy
+  "return last remaining number after repeated oxy-filter"
+  [numbers]
+  (var nums (array ;numbers))
+  (var col 0)
+  (while (> (length nums) 1)
+    (set nums (oxy-filter nums col))
+    #(printf " --- OXY col=%j" col)
+    #(print-grid nums)
+    #(printf " --------------")
+    (++ col))
+  (nums 0))
+
+(printf "oxy test-case is %j" (oxy test-case))
+
+(defn co2-filter
+  "return subset of numbers, lines whose column matches "
+  [numbers col]
+  (def this-column (column col numbers))
+  (def counts (frequencies this-column))
+  (var which -1)
+  (if (> (counts zero) (counts one))
+    (set which one)
+    (set which zero))
+  # don't choose a value which isn't there :
+  (if (not (counts zero)) (set which one))
+  (if (not (counts one)) (set which zero))
+  (filter (fn [number] (= which (number col))) numbers))
   
+(defn co2
+  "return last remaining number after repeated co2-filter"
+  [numbers]
+  (var nums (array ;numbers))
+  (var col 0)
+  (while (> (length nums) 1)
+    (set nums (co2-filter nums col))
+    (++ col))
+  (nums 0))
+
+(defn life-support [numbers]
+  (* (base2 (co2 numbers)) (base2 (oxy numbers))))
+
+(printf "life-support for test-case is %j" (life-support test-case)
+	" (should be 230)")
+
+#(printf "co2 day3 is %j" (co2 day3))
+#(printf "oxy day3 is %j" (oxy day3))
+
+(printf "Day 3 Part 2 is %j" (life-support day3))
+
+
