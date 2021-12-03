@@ -1,4 +1,4 @@
-``--- 2.janet ---------------------------------------
+``--- 3.janet ---------------------------------------
  https://adventofcode.com/2021/day/3
 
     $ janet 3.janet 
@@ -38,7 +38,7 @@
     oxy filter 0 is @["11110" "10110" "10111" "10101" "11100" "10000" "11001"]
     oxy filter 1 is @["10110" "10111" "10101" "10000"]
     oxy test-case is "10111"
-    life-support for test-case is 230
+    life-support for test-case is 230 (should be 230)
     Day 3 Part 2 is 4267809
 
 I'm not particularly happy with my work on this one - the code feels
@@ -120,7 +120,7 @@ the lines ... Oops.
 (print "-- test-case columns --")
 (print-grid (columns test-case))
 
-(def [zero one] [48 49])  # byte constants
+(def [zero one] [48 49])  # ascii byte constants for "0" and "1"
 
 (defn gamma
   "given a binary word like '11000',
@@ -242,12 +242,11 @@ the lines ... Oops.
 (defn life-support [numbers]
   (* (base2 (co2 numbers)) (base2 (oxy numbers))))
 
-(printf "life-support for test-case is %j" (life-support test-case)
-	" (should be 230)")
+(printf "life-support for test-case is %j (should be 230)"
+	(life-support test-case))
 
 #(printf "co2 day3 is %j" (co2 day3))
 #(printf "oxy day3 is %j" (oxy day3))
 
 (printf "Day 3 Part 2 is %j" (life-support day3))
-
 
