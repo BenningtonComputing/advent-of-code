@@ -11,11 +11,11 @@ I sure hope the puzzles don't ramp up too much the first few days!
 """
 
 def process_input(input_name):
-  with open('input.txt') as input:
+  with open(input_name) as input:
     return input.readlines()
 
-def calculate_pos(input, has_aim=False):
 
+def calculate_pos(input, has_aim=False):
   aim, horizontal, depth = 0, 0, 0
 
   for line in input:
@@ -35,6 +35,7 @@ def calculate_pos(input, has_aim=False):
     return horizontal * depth
   else:
     return horizontal * aim
+
 
 input = process_input('input.txt')
 p1 = calculate_pos(input)
