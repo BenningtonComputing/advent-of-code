@@ -19,6 +19,7 @@ def calculate_gamma_rate(inputs)
 end
 
 def calculate_epsilon_rate(str_len, gamma)
+	# epsilon is the bitwise complement of gamma
 	epsilon = (str_len - 1).downto(0).map { |n| (~gamma)[n] }.join.to_i(2)
 end
 
