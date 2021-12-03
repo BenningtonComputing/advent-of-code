@@ -1,14 +1,5 @@
 " utils.janet "
 
-(defn foo "a function" [x y] (+ x y))
-
-## already part of janet (!)
-#(defn slurp
-#  "read an entire file"
-#  [filename]
-#  (with [infile (file/open filename :r)]
-#	(file/read infile :all)))
-
 (defn slurp-input "get input for day n" [n]
   (slurp (string/join ["./inputs/" (string n) ".txt"])))
 
@@ -26,55 +17,20 @@
   [filename]
   (string->ints (slurp filename)))
 
-#(var a (file->ints "ints.txt"))
-#(print "(type a) is " (type a))
-#(pp a)
-#
-#(var b @[1 2 3 4 5 6 7 8])
-#(print "(type b) is " (type b))
-#(pp b)
-#
-#(print "(= a b is) " (= a b))
-#
-# Hmmm. So mutable arrays do that look the same are not = to each other,
-# while immutable arrays that look the same are = to each other.
-#
-#   (var a-mutable @[1 2 3])
-#   (var b-mutable @[1 2 3])
-#   (= a-mutable b-mutable)    # -> false
-#
-#   (var a [1 2 3])
-#   (var b [1 2 3])
-#   (= a b)           # -> true
-#
-# Looks like I can force the behavior I want by creating immutable copies
-# of these arrays with [;a], where the ";" is the "splice" operation
-# that essentially inserts the values there, unpacking them all.
-# But it seems pretty kludgy.
-#
-
-(defn array=
-  " equality for mutable arrays that is true if they look the same "
-  [& arrays]
-  (all identity (map = ;arrays)))
-  # alternate implementation : (= ;(seq [a :in arrays] [;a])))
-(assert (array= @[1 2 3] @[1 2 3]) "testing array=")
-#(assert (array= (file->ints "./misc/ints.txt") @[1 2 3 4 5 6 7 8])
-#	"testing file->ints")
-
-(defn indeces "indeces of an array" [values] (range (length values)))
-(assert (array= (indeces [4 5 6]) [0 1 2]))
+(defn indices "indices of an array" [values] (range (length values)))
+(assert (deep= (indices [4 5 6]) @[0 1 2]))
 
 (defn array/pairs 
-  " Given an array [1 2 3], return array of two 
+  " Given an array [1 2 3], return array of all combos of two 
     distinct elements [[1 2] [1 3] [2 1] [2 3] [3 1] [3 2] "
+  # This name is not the best; "pairs" means something else in janet.
   [values]
-  (seq [x :in (indeces values)
-	y :in (indeces values)
+  (seq [x :in (indices values)
+	y :in (indices values)
 	:when (not (= x y))]
        [(values x) (values y)]))
-(assert (array= (array/pairs [1 2 3])
-		[[1 2] [1 3] [2 1] [2 3] [3 1] [3 2]]))
+(assert (deep= (array/pairs [1 2 3])
+	       @[[1 2] [1 3] [2 1] [2 3] [3 1] [3 2]]))
 
 (defn text->lines
   "return array of non-empty lines from text"

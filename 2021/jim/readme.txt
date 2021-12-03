@@ -17,6 +17,7 @@ with homebrew, on macOS 11.6.1, along with its jpm package manager
 
 See :
  * https://adventofcode.com/2021
+ * https://github.com/janet-lang
  * https://janet-lang.org/docs/index.html
  * https://janet-lang.org/docs/jpm.html (*bootstrap*)
  * http://www.unexpected-vortices.com/janet/notes-and-examples/index.html
