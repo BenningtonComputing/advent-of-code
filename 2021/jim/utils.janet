@@ -99,3 +99,7 @@
     true
     false))
 
+(defn in?
+  " true if x is in items "
+  [x items]
+  (not (nil? (index-of x items))))

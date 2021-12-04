@@ -26,8 +26,18 @@
 	  27    1018    1021      64    1095
     unmarked values are @[89 51 84 27 47 35 26 15 65 46 64 1 16 80]
     final score is 51034 ... which is correct for part 1.
-
-
+    -------- resetting boards to original state -------
+     winner: id=43 , number=79 , score=51034
+     winner: id=3 , number=0 , score=0
+     winner: id=60 , number=89 , score=66661
+     winner: id=0 , number=57 , score=27360
+     winner: id=37 , number=57 , score=42180
+     ...
+     winners are 
+     @[(79 43 51034) (0 3 0) (89 60 66661) ...
+       (27 82 6750) (45 56 11610) (19 21 5434)]
+     Part 1 : score for 1st winner is 51034
+     Part 2 : score for last winner is 5434
 
 -------------------------------------------------------``
 (import* "./utils" :prefix "")       
@@ -45,7 +55,7 @@
 #(print "-- raw boards --")
 #(printf "%M" text-boards)
 
-(def boards (map text->grid text-boards))
+(var boards (map text->grid text-boards))
 (print "-- first board --")
 (printf "%M" (boards 0))
 (print "-- last board --")
@@ -116,14 +126,6 @@
   [value]
   (loop [board :in boards] (mark-board! board value)))
 
-(defn play []
-  "mark each number in turn on all the boards. return the first winning board"
-  (var turn -1)
-  (while (not (winner?))
-    (++ turn)
-    (mark-boards! (numbers turn)))
-  [(numbers turn) (get-winner)])
-
 (defn print-board [board]
   (for col 0 n
     (for row 0 n
@@ -136,13 +138,57 @@
 (defn final-score [number board]
   (* number (+ ;(unmarked board))))
 
-(def [last-number winner] (play))
+(defn play []
+  "mark each number in turn on all the boards. 
+   return the first winning board"
+  (var turn -1)
+  (while (not (winner?))
+    (++ turn)
+    (mark-boards! (numbers turn)))
+  [(numbers turn) (get-winner)])
+
+(defn play-all []
+  "mark each number in turn on all the boards. 
+   keep playing until the end.
+   return an array giving all winners, 
+   [board_id number] in the correct order"
+  (def winners @[])
+  (def has-won @[])
+  (loop [number :in numbers]
+    (mark-boards! number)
+    (loop [id :in (indices boards)]
+      (if (and (not (in? id has-won)) (board-wins? (boards id)))
+	(do
+	  (array/push has-won id)
+	  (def score (final-score number (boards id)))
+	  (printf " winner: id=%j , number=%j , score=%j" id number score)
+	  (array/push winners [number id score])))))
+  winners)
+
+#-- original part1 code 
+(def [last-number winner] (play))   # part 1 version
 (printf "-- last number was %j ; the winner is-------" last-number)
 (print-board winner)
-
 (printf "unmarked values are %j" (unmarked winner))
 (printf "final score is %j ... which is correct for part 1."
 	(final-score last-number winner))
+
+
+#-- for part 2, running through all the winners
+#   ... and now extracting 1st and last for parts 1 & 2.
+
+# --- reset boards to initial position
+(printf "-------- resetting boards to original state -------")
+(set boards (map text->grid text-boards))
+
+(def winners (play-all))
+(def [number0 winner0-id score0] (winners 0))
+(def [number-last winner-last-id score-last] (last winners))
+
+(printf "winners are ")
+(pp winners)
+(printf "Part 1 : score for 1st winner is %j" score0)
+(printf "Part 2 : score for last winner is %j" score-last)
 
 # ---------------------------------------------------
 
