@@ -15,7 +15,7 @@
   
   But who's counting, eh? 🤨
 -------------------------------------------------------"
-(import* "./utils" :prefix "")       
+(import ./utils :prefix "")
 
 (def day1 (text->numbers (slurp-input 1)))
 (printf "The input for day1 is %j integers: %j ..."

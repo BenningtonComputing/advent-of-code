@@ -40,7 +40,7 @@
      Part 2 : score for last winner is 5434
 
 -------------------------------------------------------``
-(import* "./utils" :prefix "")       
+(import ./utils :prefix "")       
 (def day4-raw (slurp-input 4))
 
 #(printf "The input for day4 starts with %j." (array/slice day4 0 3))
@@ -62,7 +62,6 @@
 (printf "%M" (last boards))
 
 (def n 5)   # boards are n x n i.e. 5 x 5
-(def _n 4)
 
 (defn mark [x] (+ x 1000))  # make a mark by adding 1000 (numbers are 0 to 99)
 (defn mark? [x] (> x 999))  # check for a mark
@@ -165,14 +164,13 @@
 	  (array/push winners [number id score])))))
   winners)
 
-#-- original part1 code 
+#-- part1 code 
 (def [last-number winner] (play))   # part 1 version
 (printf "-- last number was %j ; the winner is-------" last-number)
 (print-board winner)
 (printf "unmarked values are %j" (unmarked winner))
 (printf "final score is %j ... which is correct for part 1."
 	(final-score last-number winner))
-
 
 #-- for part 2, running through all the winners
 #   ... and now extracting 1st and last for parts 1 & 2.

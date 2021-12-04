@@ -51,8 +51,7 @@ frequency count of 0 (i.e. less than the other) and filtering out all
 the lines ... Oops.
  
 -------------------------------------------------------``
-(import* "./utils" :prefix "")       
-
+(import ./utils :prefix "")       
 (def day3 (text->lines (slurp-input 3)))
 
 (printf "The input for day3 starts with %j." (array/slice day3 0 3))
