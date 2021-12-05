@@ -6,8 +6,8 @@
     Day 5 Part 2 is 20500.
     real  0m2.361s
 
-  Took me 2:20, but I'm happier this time with my use
-  of the Janet language and in the code quality.
+  Took me 2:20, but I'm happier this time with my use of the Janet
+  language and in the code quality.
 
   And added several 2D point functions to utils.janet.
 
@@ -16,6 +16,10 @@
   array is a distinct key, even if they print the same ... which is
   not at all what I wanted. Changing the points from @[x y] to [x y]
   fixed this somewhat subtle bug.
+
+  For this problem, I was able to anticipate the part 2 variation and
+  so wrote the part 1 code in a way that didn't much alteration to
+  produce the part 2 answer.
 
 -------------------------------------------------------``
 (use ./utils spork)
