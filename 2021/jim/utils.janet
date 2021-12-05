@@ -107,6 +107,14 @@
   [x items]
   (not (nil? (index-of x items))))
 
+(defn sign
+  "1, 0, -1 for positive, zero, negative"
+  # Also see (cmp x y) which is similar.
+  [x]
+  (cond (< x 0) -1
+	(> x 0)  1
+	         0))
+
 # -- 2D geometry --
 
 # Since I am sometimes using these points as keys in tables,

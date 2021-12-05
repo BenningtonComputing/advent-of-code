@@ -6,8 +6,8 @@
     Day 5 Part 2 is 20500.
     real  0m2.361s
 
-  Took me 2:20, but I'm happier this time with my use of the Janet
-  language and in the code quality.
+  Took me 2:20 ... but I'm happier this time with my use of the Janet
+  language - starting maybe to get the hang of it. ;)
 
   And added several 2D point functions to utils.janet.
 
@@ -72,13 +72,6 @@
 
 # Should be 6 of test-vents that are horizontal or vertical.
 (assert (= 6 (length (filter hv? test-vents))) "check test-vents")
-
-(defn sign
-  "1, 0, -1 for positive, zero, negative"
-  [x]
-  (cond (< x 0) -1
-	(> x 0)  1
-	         0))
 
 (defn vent->coords
   "given a vent line segment, return an array of the (x y) coords it covers"
