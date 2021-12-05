@@ -1,0 +1,18 @@
+./utils.janet:(defn text->lines
+./utils.janet:(defn text->numbers
+./utils.janet:  (map parse (text->lines text)))
+./utils.janet:(defn text->grid
+./utils.janet:  (def lines (text->lines text))
+./utils.janet:(def test-text-grid ``
+./utils.janet:(def test-grid (text->grid test-text-grid))
+./3.janet:(def day3 (text->lines (slurp-input 3)))
+./3.janet:(def test-case (text->lines ``
+./1.janet:(def day1 (text->numbers (slurp-input 1)))
+./5.janet:(def day5-lines (text->lines day5-raw))
+./2.janet:(def day2 (text->lines (slurp-input 2)))
+./2.janet:(def test-lines (text->lines test-case))
+./4.janet:(def numbers (string-delim->ints "," ((text->lines day4-raw) 0)))
+./4.janet:(def text-boards (slice (string/split "\n\n" day4-raw) 1))
+./4.janet:#(printf "%M" text-boards)
+./4.janet:(var boards (map text->grid text-boards))
+./4.janet:(set boards (map text->grid text-boards))

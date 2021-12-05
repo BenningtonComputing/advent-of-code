@@ -14,7 +14,7 @@
   " Return (a,b) where both are in list of values, and they sum to total "
   [total values]
   (filter (fn [ [a b] ] (= (+ a b) total))
-	  (array/pairs values)))
+	  (array->pairs values)))
 
 # (pp (find-total-pair 2020 numbers))
 # @[(321 1699) (1699 321)]

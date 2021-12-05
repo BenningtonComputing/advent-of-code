@@ -11,12 +11,10 @@
   (filter (fn [x] (> (length x) 0))
 	  (string/split "\n" text)))
 
-(defn text->numbers
-  "text is one number per line ; return array of numbers"
+(defn collapse-space
+  "convert multiple adjacent spaces to one space"
   [text]
-  (map parse (text->lines text)))
-
-(defn collapse-space [text] (peg/replace-all ~(some " ") " " text))
+  (peg/replace-all ~(some " ") " " text))
 (assert (deep= (collapse-space "a  b  c") @"a b c"))
 
 (defn filter-out-nil [values] (filter (fn [x] (not (nil? x))) values))
@@ -29,7 +27,7 @@
 
 (defn text->grid
   " convert lines of text with spaces between numbers 
-    to an array of array of numbers "
+    to a grid (an array of arrays) of numbers "
   [text]
   (def lines (text->lines text))
   (map line->numbers lines))
@@ -63,7 +61,7 @@
 (defn indices "indices of an array" [values] (range (length values)))
 (assert (deep= (indices [4 5 6]) @[0 1 2]))
 
-(defn array/pairs 
+(defn array->pairs
   " Given an array [1 2 3], return array of all combos of two 
     distinct elements [[1 2] [1 3] [2 1] [2 3] [3 1] [3 2] "
   # This name is not the best; "pairs" means something else in janet.
@@ -72,11 +70,12 @@
 	y :in (indices values)
 	:when (not (= x y))]
        [(values x) (values y)]))
-(assert (deep= (array/pairs [1 2 3])
+(assert (deep= (array->pairs [1 2 3])
 	       @[[1 2] [1 3] [2 1] [2 3] [3 1] [3 2]]))
 
 (defn get2
   " return value at given row and column of 2d grid i.e. array of array "
+  # But see get-in ; (get-in matrix [row col])
   [grid row col]
   ((grid row) col))
 
@@ -84,6 +83,7 @@
 
 (defn set2
   " set 2d grid (i.e. array of arrays) at (row,column) to given value"
+  # But see (put-in ...) ; (put-in (matrix) [row col] value)
   [grid row col value]
   (set ((grid row) col) value))
 
@@ -94,6 +94,8 @@
 
 (defn any
   " return true if any of (predicate value), else return false "
+  # But see (truthy? x) and (any? pred vals)
+  # ...better written as (truthy? (any? predicate values))
   [predicate values]
   (if (some predicate values)
     true
@@ -101,5 +103,6 @@
 
 (defn in?
   " true if x is in items "
+  # Also see (find predicate items &opt default)
   [x items]
   (not (nil? (index-of x items))))

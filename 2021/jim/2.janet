@@ -17,7 +17,7 @@
     product of position*depth is 1741971043
     ... which is the right answer for Day 2 Part 2.
 -------------------------------------------------------``
-(import ./utils :prefix "")       
+(use ./utils)
 
 (def day2 (text->lines (slurp-input 2)))
 

@@ -15,9 +15,9 @@
   
   But who's counting, eh? 🤨
 -------------------------------------------------------"
-(import ./utils :prefix "")
+(use ./utils)
 
-(def day1 (text->numbers (slurp-input 1)))
+(def day1 (map parse (text->lines (slurp-input 1))))
 (printf "The input for day1 is %j integers: %j ..."
 	(length day1) (array/slice day1 0 5))
 

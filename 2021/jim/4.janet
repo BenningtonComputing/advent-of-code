@@ -40,7 +40,8 @@
      Part 2 : score for last winner is 5434
 
 -------------------------------------------------------``
-(import ./utils :prefix "")       
+(use ./utils)
+
 (def day4-raw (slurp-input 4))
 
 #(printf "The input for day4 starts with %j." (array/slice day4 0 3))
