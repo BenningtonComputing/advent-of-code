@@ -106,3 +106,24 @@
   # Also see (find predicate items &opt default)
   [x items]
   (not (nil? (index-of x items))))
+
+# -- 2D geometry --
+
+# Since I am sometimes using these points as keys in tables,
+# these functions need to return immutable tuples, not mutable arrays.
+
+(defn add-2d
+  " vector 2D addition for points i.e. [x1 y1] and [x2 y2]"
+  [[x1 y1] [x2 y2]]
+  [ (+ x1 x2) (+ y1 y2) ])
+
+(defn subtract-2d
+  " vector 2D subtraction for points i.e. [x1 y1] - [x2 y2]"
+  [[x1 y1] [x2 y2]]  
+  [ (- x1 x2) (- y1 y2) ])
+
+(defn scale-2d
+  " scalar 2D multiplication i.e. (factor * [x y]) "
+  [factor [x y]]
+  [ (* factor x) (* factor y) ])
+
