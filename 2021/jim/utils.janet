@@ -115,6 +115,17 @@
 	(> x 0)  1
 	         0))
 
+(defn table->stringy
+  " turn table into '<table key:value key:value>"
+  [t]
+  (def result @"<table ")
+  (loop [[key value] :pairs t]
+    (loop [s :in
+	     [(describe key) ":" (describe value) " "]]
+      (buffer/push result s)))
+  (buffer/push result ">")
+  result)
+
 # -- 2D geometry --
 
 # Since I am sometimes using these points as keys in tables,
