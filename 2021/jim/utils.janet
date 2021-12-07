@@ -5,6 +5,11 @@
 (defn slurp-input "get input for day n" [n]
   (slurp (string/join ["./inputs/" (string n) ".txt"])))
 
+(defn parse-comma-numbers
+  "convert '1,2,3\n' to [1 2 3]"
+  [text]
+  (map scan-number (string/split "," (string/trim text))))
+
 (defn text->lines
   "return array of non-empty lines from text"
   [text]
@@ -57,6 +62,11 @@
   (string->ints (slurp filename)))
 
 # --- data structures ---
+
+(defn map-table
+  " Given a function that produces [key value] pairs, collect into a table "
+  [func values]
+  (table ;(flatten (map func values))))
 
 (defn indices "indices of an array" [values] (range (length values)))
 (assert (deep= (indices [4 5 6]) @[0 1 2]))
@@ -145,4 +155,6 @@
   " scalar 2D multiplication i.e. (factor * [x y]) "
   [factor [x y]]
   [ (* factor x) (* factor y) ])
+
+
 
