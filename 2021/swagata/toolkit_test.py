@@ -2,10 +2,12 @@
 
 Swagata"""
 
+import collections
 from toolkit import *
 
 assert binary_to_decimal('10110') == 22
 assert binary_to_decimal('01001') == 9
 
-print(3/2)
-print(2 == 4/2)
+assert str_to_tup('3, 4') == (3,4)
+assert str_to_tup('4,5,6') == (4,5,6)
+
