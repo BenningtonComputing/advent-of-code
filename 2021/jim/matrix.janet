@@ -26,7 +26,7 @@ Examples include
 
  Access
 
-    (.get m [row col ...])            slice notation?
+    (.get m [row col ...])            slice notation? (maybe [elements] (range min max) :* )
     (.put m [row col ...] value)
 
  Functions

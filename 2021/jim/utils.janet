@@ -76,6 +76,8 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 
 (defn map-table
   " Given a function that produces [key value] pairs, collect into a table "
+  # THIS IMPLEMENTATION IS BUGGY - flatten will change interior key/value stuff.
+  # FIXME : change to an accumulator pattern, walking through pairs & updating 
   [func values]
   (table ;(flatten (map func values))))
 
@@ -97,6 +99,7 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 (defn get2
   " return value at given row and column of 2d grid i.e. array of array "
   # But see get-in ; (get-in matrix [row col])
+  # DEPRECATED - use .get below
   [grid row col]
   ((grid row) col))
 
@@ -105,11 +108,54 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 (defn set2
   " set 2d grid (i.e. array of arrays) at (row,column) to given value"
   # But see (put-in ...) ; (put-in (matrix) [row col] value)
+  # DEPRECATED - use .put below  
   [grid row col value]
   (set ((grid row) col) value))
 
 (set2 test-grid 0 0 100)
 (assert (= (get2 test-grid 0 0) 100))
+
+# -- 2D vectors --
+
+(defn .get [grid [row col]] (get-in grid [row col]))
+(defn .put [grid [row col] value] (put-in grid [row col] value))
+
+(defn .add "2d vector addition" [[row1 col1] [row2 col2]]
+  [(+ row1 row2) (+ col1 col2)])
+  
+(def directions [[1 0] [0 1] [-1 0] [0 -1]])  # right down left up on grid
+(defn neighbors "4 neighbor points" [p] (map |(.add $ p) directions))
+
+(defn add-border
+  "given a rectangular grid, add a border with given edge value"
+  [grid edge]
+  (def n (length (grid 0)))
+  (def n2 (+ 2 n))
+  (def result @[ (array/new-filled n2 edge) ])
+  (loop [line :in grid]
+    (array/push result (array/concat @[edge] ;line edge)))
+  (array/push result (array/new-filled n2 edge))
+  result)
+
+(defn .left [grid] 1)                        # index of left range in border
+(defn .right [grid] (dec (length (grid 0)))) # index of right range ditto
+(defn .top [grid] 1)
+(defn .bottom [grid] (dec (length grid)))
+
+(defn grid-map
+  "apply (func grid [row col]) to each point; return array of results"
+  [func grid]
+  (def result @[])
+  (loop [row :range [(.top grid) (.bottom grid)]]
+    (loop [col :range [(.left grid) (.right grid)]]
+      (array/push result (func grid [row col]))))
+  result)
+
+(defn grid-clone-fill [grid value]
+  "create a new grid, same shape as given one, filled with given value"
+  (def width (length (grid 0)))
+  (def height (length grid))
+  (map (fn [i] (array/new-filled width value)) (range height)))
 
 # -- misc --
 

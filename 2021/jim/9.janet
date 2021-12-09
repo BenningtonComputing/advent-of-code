@@ -1,6 +1,19 @@
 ``--- 9.janet ---------------------------------------
   https://adventofcode.com/2021/day/9
 
+      $ time janet 9.janet 
+      total risk for example grid is 15
+      Day 9 Part 1 is 545
+      largest three basins in example are (9 9 14)
+      Day 9 Part 2 is 950600
+
+      real  0m0.407s
+      user  0m0.370s
+      sys  0m0.020s
+
+  Starting implementing some 2D vector and grid functions,
+  put in ./utils.janet.
+
 -------------------------------------------------------``
 (use ./utils)
 
@@ -22,33 +35,11 @@
     (buffer/push result "\n"))
   result)
 
-(defn add-border [grid]
-  (def n (length (grid 0)))
-  (def n2 (+ 2 n))
-  (def edge 9)
-  (def result @[ (array/new-filled n2 edge) ])
-  (loop [line :in grid]
-    (array/push result (array/concat @[edge] ;line edge)))
-  (array/push result (array/new-filled n2 edge))
-  result)
-
-(def example-grid (add-border (text->grid example-text)))
-(def day9-grid (add-border (text->grid day9-text)))
+(def example-grid (add-border (text->grid example-text) 9))
+(def day9-grid (add-border (text->grid day9-text) 9))
 
 #(print "--- example grid with border of 9's ---")
 #(print (grid->string example-grid))
-
-(defn .get [grid [row col]] (get-in grid [row col]))
-(defn .add "2d vector addition" [[row1 col1] [row2 col2]]
-  [(+ row1 row2) (+ col1 col2)])
-  
-(def directions [[1 0] [0 1] [-1 0] [0 -1]])  # right down left up on grid
-(defn neighbors "4 neighbor points" [p] (map |(.add $ p) directions))
-
-(defn .left [grid] 1)                        # index of left range in border
-(defn .right [grid] (dec (length (grid 0)))) # index of right range ditto
-(defn .top [grid] 1)
-(defn .bottom [grid] (dec (length grid)))
 
 (defn low? "is point lower than neighbors?" [grid point]
   (def height (.get grid point))
@@ -59,15 +50,6 @@
   (if (low? grid point)
     (+ 1 (.get grid point))
     0))
-
-(defn grid-map
-  "apply (func grid [row col]) to each point; return array of results"
-  [func grid]
-  (def result @[])
-  (loop [row :range [(.top grid) (.bottom grid)]]
-    (loop [col :range [(.left grid) (.right grid)]]
-      (array/push result (func grid [row col]))))
-  result)
 
 (defn total-risk [grid] (+ ;(grid-map |(risk $0 $1) grid)))
 
@@ -84,6 +66,36 @@
 
 # --------
 
+#(printf "%j" (zeros example-grid))
 
+(defn lowest-neighbor [grid point]
+  (def heights-positions @{})
+  (loop [p :in (neighbors point)]
+    (put heights-positions (.get grid p) p))
+  (def low-point (min ;(keys heights-positions)))
+  (heights-positions low-point))
 
+(defn basins [grid]
+  (def flows (grid-clone-fill grid 0))
+  (loop [row :range [(.top grid) (.bottom grid)]]
+    (loop [col :range [(.left grid) (.right grid)]]
+      # visit each [row col] in grid
+      (var here [row col])
+      #(printf "looping; here is %j" here)
+      (if-not (= (.get grid here) 9)       # do nothing if its a 9
+	(do                                # otherwise, follow along to low
+	  #(printf " (low? grid here) is %j" (low? grid here))
+	  (while (not (low? grid here))
+	    #(printf " here is %j ; (lowest-neighbor grid here) is %j" here (lowest-neighbor grid here))
+	    (set here (lowest-neighbor grid here)))     # move to lowest neighbor
+	  (.put flows here (inc (.get flows here)))))))  # at low point, add 1.
+  flows)
+
+(defn largest-three [grid]
+  # slicing indices are weird : -4 to -1 is last three ... go figure.
+  (slice (sort (flatten grid)) -4 -1))
+
+(printf "largest three basins in example are %n" (largest-three (basins example-grid)))
+
+(printf "Day 9 Part 2 is %j" (* ;(largest-three (basins day9-grid))))
 
