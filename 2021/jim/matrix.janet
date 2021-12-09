@@ -15,30 +15,32 @@ Examples include
     @[@[@[1 2 3] @[4 5 6]]    
       @[@[0 1 0] @[4 5 6]]]   # a mutable tensor with shape [2 2 3]
 
-Functions
 
- Element-by-element operations, returning tuple/arrays
- (depending on the input type) the same shape as the original.
+ Operations
+ (return tuples or arrays, same shape and type as the original)
 
-    (.+. m1 m2)                 element-by-element addition
-    (.-. m1 m2)                 element-by-element subtraction
-    (.*. m1 m2)                 element-by-element multiplication
+    (.+ m1 m2)                 element-by-element addition
+    (.- m1 m2)                 element-by-element subtraction
+    (.* m1 m2)                 element-by-element multiplication
+    (scale factor matrix)      scalar multiplication
 
- Indexing and modification. 
+ Access
 
-    (.get. m [row col ...])            [min max]  slice ; :* all
-    (.put. m [row col ...] value)
+    (.get m [row col ...])            slice notation?
+    (.put m [row col ...] value)
 
-(.map. f m)                 apply f to each element; return same shape
+ Functions
 
-(shape m)                   [dim1 dim2 ...] e.g. [rows columns ...]
-(outer m1 m2)               outer product with shape [ ;(shape m1) ;(shape m2)]
-(dot m1 m2)                 inner dot product (i.e. matrix multiplication)
-(reshape m shape)
+    (.map f m)                 apply f to each element; return same shape
 
-(determinant m)             matrix determinant
-(transpose m)
-(invert m)                  multiplicative inverse
+    (shape m)                   [dim1 dim2 ...] e.g. [rows columns ...]
+    (outer m1 m2)               outer product with shape [ ;(shape m1) ;(shape m2)]
+    (dot m1 m2)                 inner dot product (i.e. matrix multiplication)
+    (reshape m shape)
+
+    (determinant m)             matrix determinant
+    (transpose m)
+    (invert m)                  multiplicative inverse
 
 Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 ``

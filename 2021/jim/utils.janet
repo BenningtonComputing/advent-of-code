@@ -66,6 +66,12 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
   [filename]
   (string->ints (slurp filename)))
 
+(defn line->digits " '1234' -> [ 2 3 4] " [line]
+  (def ascii0 (chr "0"))
+  (tuple ;(map |(- $ ascii0) (string/bytes (string/trim line)))))
+(assert (= (line->digits "123") [1 2 3]) "check line->numbers")
+
+
 # --- data structures ---
 
 (defn map-table
