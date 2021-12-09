@@ -1,4 +1,9 @@
-" utils.janet "
+`` utils.janet
+
+utility functions for advent of code 2021
+
+Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
+``
 
 # --- input ---
 
@@ -156,5 +161,73 @@
   [factor [x y]]
   [ (* factor x) (* factor y) ])
 
+# -- sets ---------
 
+(defn make-set "create a set" [values] (map-table (fn [x] [x true]) values))
+
+(defn to-struct [s] (if (table? s) (table/to-struct s) s))
+
+(defn sets=? "are two sets the same?" [s1 s2] (= ;(map to-struct [s1 s2])))
+(assert (sets=? (make-set [:a :b]) (make-set [:b :a :a])) "test sets=?")
+(assert (not (sets=? (make-set [:a :b :c]) (make-set [:b :a :a]))) "test not sets=?")
+
+(defn member? "is s in set?" [s item] (truthy? (in s item)))
+(assert (member? (make-set [:b :a]) :a) "member? test")
+
+(defn union "union of two sets" [s1 s2] (merge s1 s2))
+
+(defn difference "difference of two sets" [s1 s2]
+  (make-set (filter (fn [k] (not (member? s2 k))) (keys s1))))
+(assert (let [s1234 (make-set [1 2 3 4])
+	      s12   (make-set [1 2])
+	      s34   (make-set [3 4])]
+	  (sets=? (difference s1234 s12) s34)) "difference test")
+
+(defn set->stringy " turn table into '<set value value ...>' " [s]
+  (def result @"<set ")
+  (loop [[key value] :pairs s]
+    (buffer/push result (string/format "%q " key)))
+  (buffer/push result ">")
+  result)
+
+(defn subset? "is s1 a subset of s2?" [s1 s2]
+  (def u (union s1 s2))
+  (def result (sets=? u s2))
+  #(printf " IN SUBSET? s1=%j s2=%j u=%j result=%j " s1 s2 u result)
+  result)
+(assert (subset? (make-set [1 2 3]) (make-set [1 2 3 4])) "subset? test")
+(assert (not (subset? (make-set [1 7 3]) (make-set [1 2 3 4]))) "not subset? test")
+
+(defn letters->set "return immutable struct set " [s]
+  (table/to-struct (make-set (string/bytes s))))
+(assert (= (letters->set "abc") {97 true 98 true 99 true}) "test letters->set")
+
+(defn set->letters "inverse of letters->set" [ss]
+  (string/from-bytes ;(sort (keys ss))))
+(assert (= (set->letters (letters->set "abc")) "abc") "test set->letters")
+
+# -- counting ----
+
+# from https://github.com/MikeBeller/janet-cookbook#generators
+(defn swap [a i j]
+  (def t (a i))
+  (put a i (a j))
+  (put a j t))
+(defn permutations [items]
+  (fiber/new (fn []
+               (defn perm [a k]
+                 (if (= k 1)
+                   (yield (tuple/slice a))
+                   (do (perm a (- k 1))
+                     (for i 0 (- k 1)
+                       (if (even? k)
+                         (swap a i (- k 1))
+                         (swap a 0 (- k 1)))
+                       (perm a (- k 1))))))
+               (perm (array/slice items) (length items)))))
+(defn print-permutations [n]
+  (loop [p :in (permutations (range n))]
+    (pp p)))
+
+    
 
