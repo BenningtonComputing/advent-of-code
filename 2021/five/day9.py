@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-day7-2021.py - my solution to day 9 of advent of code 2021.
+day9-2021.py - my solution to day 9 of advent of code 2021.
                the link to the problem is:
                https://adventofcode.com/2021/day/9
                
@@ -10,7 +10,7 @@ day7-2021.py - my solution to day 9 of advent of code 2021.
                https://gist.github.com/fivegrant/ef243819e12b1f0ca1c679a2388e038f
 """
 
-# Snag Data \ stole this from my day 9 code
+# Snag Data \ stole this from my day 8 code
 import sys
 data_path = sys.argv[1]
 with open(data_path) as f:
