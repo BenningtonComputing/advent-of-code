@@ -1,7 +1,7 @@
-``--- 9.janet ---------------------------------------
+``--- 09.janet ---------------------------------------
   https://adventofcode.com/2021/day/9
 
-      $ time janet 9.janet 
+      $ time janet 09.janet 
       total risk for example grid is 15
       Day 9 Part 1 is 545
       largest three basins in example are (9 9 14)

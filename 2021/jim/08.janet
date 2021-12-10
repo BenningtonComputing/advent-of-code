@@ -1,7 +1,7 @@
-``--- 8.janet ---------------------------------------
+``--- 08.janet ---------------------------------------
   https://adventofcode.com/2021/day/8
 
-      $ time janet 8.janet 
+      $ time janet 08.janet 
       count1478 test is 26
       Day 8 Part 1 is 261
       translated example line is 5353

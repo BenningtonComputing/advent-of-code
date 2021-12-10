@@ -1,7 +1,7 @@
-``--- 7.janet ---------------------------------------
+``--- 07.janet ---------------------------------------
   https://adventofcode.com/2021/day/7
 
-      $ time janet 7.janet 
+      $ time janet 07.janet 
       day7 has 1000 numbers with (min,max) (0, 1881) : @[1101 1 29 ... 85 9 454]
       test has 10 numbers with (min,max) (0, 16) : @[16 1 2 0 4 2 7 1 2 14]
       min test fuel is 37 at position 2

@@ -1,7 +1,7 @@
-``--- 3.janet ---------------------------------------
+``--- 03.janet ---------------------------------------
  https://adventofcode.com/2021/day/3
 
-    $ janet 3.janet 
+    $ janet 03.janet 
     The input for day3 starts with @["111110110111" "100111000111" "011101111101"].
     Number of lines is 1000.
     Length of a line is 12.

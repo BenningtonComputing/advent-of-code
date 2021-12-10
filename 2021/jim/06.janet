@@ -1,7 +1,7 @@
-``--- 6.janet ---------------------------------------
+``--- 06.janet ---------------------------------------
   https://adventofcode.com/2021/day/6
 
-      $ time janet 6.janet
+      $ time janet 06.janet
       @"<table 3:2 4:1 1:1 2:1 >"
       day 1, count 5 = @"<table 2:2 3:1 0:1 1:1 >"
       day 2, count 6 = @"<table 1:2 2:1 0:1 6:1 8:1 >"
