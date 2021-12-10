@@ -1,7 +1,30 @@
 ``--- 10.janet ---------------------------------------
   https://adventofcode.com/2021/day/10
 
+      $ time janet 10.janet 
+       parse '[({(<(())[]>[[{[]{<()<>>' : incomplete; score 0
+       parse '[(()[<>])]({[<{<<[]>>(' : incomplete; score 0
+       parse '{([(<{}[<>[]}>{[]{[(<()>' : illegal '}'; score 1197
+       parse '(((({<>}<{<{<>}{[]{[]{}' : incomplete; score 0
+       parse '[[<[([]))<([[{}[[()]]]' : illegal ')'; score 3
+       parse '[{[{({}]{}}([{[{{{}}([]' : illegal ']'; score 57
+       parse '{<[[]]>}<{[{[{[]{()[[[]' : incomplete; score 0
+       parse '[<(<(<(<{}))><([]([]()' : illegal ')'; score 3
+       parse '<{([([[(<>()){}]>(<<{{' : illegal '>'; score 25137
+       parse '<{([{{}}[<[[[<>{}]]]>[]]' : incomplete; score 0
+      Total score for example lines is 26397
+      Day 10 Part 1 is 266301
+       [({(<(())[]>[[{[]{<()<>> complete by adding }}]])})] ; points 288957 
+       [(()[<>])]({[<{<<[]>>( complete by adding )}>]}) ; points 5566 
+       (((({<>}<{<{<>}{[]{[]{} complete by adding }}>}>)))) ; points 1480781 
+       {<[[]]>}<{[{[{[]{()[[[] complete by adding ]]}}]}]}> ; points 995444 
+       <{([{{}}[<[[[<>{}]]]>[]] complete by adding ])}> ; points 294 
+      Middle autocomplete score is 288957
+      Day 10 Part 2 is 3404870164
 
+      real  0m0.024s
+      user  0m0.016s
+      sys   0m0.004s
 -------------------------------------------------------``
 (use ./utils)
 
@@ -35,7 +58,7 @@
 #
 # I could force "abc" into ["a" "b" "c"], and work length 1 strings
 # using notations that are more familiar to me, i.e. (if (= token ")")
-# ... but that doesn't feel very 'Janet'.
+# ... but that doesn't feel very 'Janet' ;)
 
 (def delimiters (string/bytes "()[]{}<>"))
 
@@ -44,7 +67,7 @@
       left-curly right-curly
       left-angle right-angle] delimiters)
 
-(def open-close
+(def open->close
   {left-paren right-paren
    left-bracket right-bracket
    left-curly right-curly
@@ -52,8 +75,8 @@
 
 (defn in? [data-struc key] (truthy? (in data-struc key)))
 
-(assert (in? open-close left-paren) "( in open-close")
-(assert (not (in? open-close right-paren)) ") not in open-close")
+(assert (in? open->close left-paren) "( in open->close")
+(assert (not (in? open->close right-paren)) ") not in open->close")
 
 (def points
   {right-paren 3
@@ -72,14 +95,11 @@
   (def stack @[])
   (var result :?)
   (loop [byte :in (string/trim line)]
-    (if (in? open-close byte)
+    (if (in? open->close byte)
 	(push stack byte)
-      (do
-	(def expect (get open-close (pop stack)))
-	(if-not (= byte expect)
-	  (do
-	    (set result byte)
-	    (break))))))
+	(if-not (= byte (open->close (pop stack)))
+	  (do (set result byte)
+	      (break)))))
   (if (= result :?)
     (if (zero? (length stack))
       (set result :valid)
@@ -87,6 +107,7 @@
   result)
 
 (defn result->string
+  "printable string for the possible parse results"
   [result]
   (case result
     :valid "valid"
@@ -97,6 +118,7 @@
 (defn total-score [lines] (+ ;(map score lines)))
 
 (defn parse-print [line]
+  "parse a line and print a summary"
   (def result (parse line))
   (prinf " parse '%s' : " line)
   (prinf "%s" (result->string result))
@@ -108,3 +130,50 @@
 (printf "Total score for example lines is %j" (total-score example-lines))
 
 (printf "Day 10 Part 1 is %j" (total-score day10-lines))
+
+# -----------------
+
+(def day10-incomplete-lines
+  "keep only the incomplete lines"
+  (filter (fn [line] (= (parse line) :incomplete)) day10-lines))
+
+(def example-incomplete-lines
+  (filter (fn [line] (= (parse line) :incomplete)) example-lines))
+
+(defn completion
+  "return the sequence of bytes that completes an incomplete line"
+  [line]
+  (def stack @[])
+  (loop [byte :in (string/trim line)]
+    (if (in? open->close byte)
+      (push stack byte)
+      (pop stack)))
+  (map open->close (reverse stack)))
+
+(def complete-points
+  {right-paren 1
+   right-bracket 2
+   right-curly 3
+   right-angle 4})
+
+(defn complete-score [line]
+  (var result 0)
+  (loop [points :in (map complete-points (completion line))]
+    (set result (+ points (* 5 result))))
+  result)
+
+(defn median [values]
+  (get (sort (array ;values))
+       (/ (dec (length values)) 2)))
+(assert (= (median [3 2 1 4 7]) 3) "check median")
+
+(defn middle-score [lines] (median (map complete-score lines)))
+
+(loop [line :in example-incomplete-lines]
+  (printf " %s complete by adding %s ; points %j "
+	  line
+	  (string/from-bytes ;(completion line))
+	  (complete-score line)))
+(printf "Middle autocomplete score is %j" (middle-score example-incomplete-lines))
+
+(printf "Day 10 Part 2 is %j" (middle-score day10-incomplete-lines))
