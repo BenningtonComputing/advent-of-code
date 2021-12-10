@@ -1,6 +1,6 @@
-``--- 2.janet ---------------------------------------
+``--- 02.janet ---------------------------------------
  https://adventofcode.com/2021/day/2
-    $ janet 2.janet
+    $ janet 02.janet
     The input for day2 starts with @["forward 8" "forward 9" "forward 9" "down 3"].
     Number of lines is 1000.
     First line as step is (:forward 8).

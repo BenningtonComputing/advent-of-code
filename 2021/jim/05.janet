@@ -1,7 +1,7 @@
-``--- 5.janet ---------------------------------------
+``--- 05.janet ---------------------------------------
   https://adventofcode.com/2021/day/5
 
-    $ time janet 5.janet
+    $ time janet 05.janet
     Day 5 Part 1 is 4655.
     Day 5 Part 2 is 20500.
     real  0m2.361s

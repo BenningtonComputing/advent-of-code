@@ -1,8 +1,8 @@
-"--- 1.janet ---------------------------------------
+"--- 01.janet ---------------------------------------
 
   puzzle : https://adventofcode.com/2021/day/1
 
-    $ janet 1.janet
+    $ janet 01.janet
     The input for day1 is 2000 integers: @[171 173 174 163 161] ...
     Day 1 Part 1 : 1266 increases.
     Day 1 Part 2 : 1217 increases in sums of triples.

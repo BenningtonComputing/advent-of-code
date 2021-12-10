@@ -16,14 +16,14 @@ with homebrew, on macOS 11.6.1, along with its jpm package manager
  From: https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/janet.rb
 
 See :
- * https://adventofcode.com/2021
+ * https://adventofcode.com/2021         <======= advent of code !!
  * https://github.com/janet-lang
  * https://janet-lang.org/docs/index.html
  * https://janet-lang.org/docs/jpm.html (*bootstrap*)
  * http://www.unexpected-vortices.com/janet/notes-and-examples/index.html
  * https://github.com/MikeBeller/janet-cookbook
 
-I'll be using emacs and its janet tricks :
+And I'll be using emacs and its janet tricks :
  * visiting *.janet uses janet-mode (paren bouncing & highlighting)
  * "M-x ijanet" launches interactive Ijanet repl window
 
