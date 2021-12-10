@@ -74,7 +74,6 @@
    left-angle right-angle})
 
 (defn in? [data-struc key] (truthy? (in data-struc key)))
-
 (assert (in? open->close left-paren) "( in open->close")
 (assert (not (in? open->close right-paren)) ") not in open->close")
 
