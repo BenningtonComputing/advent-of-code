@@ -71,6 +71,23 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
   (tuple ;(map |(- $ ascii0) (string/bytes (string/trim line)))))
 (assert (= (line->digits "123") [1 2 3]) "check line->numbers")
 
+(defn text->grid [text] (map line->digits (text->lines text)))
+(defn grid->string [grid]
+  (def result @"")
+  (loop [line :in grid]
+    (loop [digit :in line]
+      (buffer/push result (describe digit)))
+    (buffer/push result "\n"))
+  result)
+
+(defn inner-grid->string [grid]
+  "convert grid of numbers to printable string, leaving out border"
+  (def result @"")
+  (loop [line :in (slice grid 1 -2)]
+    (loop [digit :in (slice line 1 -2)]
+      (buffer/push result (describe digit)))
+    (buffer/push result "\n"))
+  result)
 
 # --- data structures ---
 
@@ -126,6 +143,12 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 (def directions [[1 0] [0 1] [-1 0] [0 -1]])  # right down left up on grid
 (defn neighbors "4 neighbor points" [p] (map |(.add $ p) directions))
 
+(def directions8 [[-1 -1] [-1 0] [-1 1]
+		  [ 0 -1]        [ 0 1]
+                  [ 1 -1] [ 1 0] [ 1 1]])
+		  
+(defn neighbors8 "8 neighbor points" [p] (map |(.add $ p) directions8))
+
 (defn add-border
   "given a rectangular grid, add a border with given edge value"
   [grid edge]
@@ -137,13 +160,15 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
   (array/push result (array/new-filled n2 edge))
   result)
 
+# extremes of grid for looping ; assumes it has a border
 (defn .left [grid] 1)                        # index of left range in border
 (defn .right [grid] (dec (length (grid 0)))) # index of right range ditto
 (defn .top [grid] 1)
 (defn .bottom [grid] (dec (length grid)))
 
 (defn grid-map
-  "apply (func grid [row col]) to each point; return array of results"
+  "apply (func grid [row col]) to points inside border; return result array"
+  # assumes grid has a border; does not apply func to border values.
   [func grid]
   (def result @[])
   (loop [row :range [(.top grid) (.bottom grid)]]
@@ -151,11 +176,26 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
       (array/push result (func grid [row col]))))
   result)
 
+(defn grid-loop
+  "apply (func grid [row col]) to each point inside border."
+  [func grid]
+  (loop [row :range [(.top grid) (.bottom grid)]]
+    (loop [col :range [(.left grid) (.right grid)]]
+      (func grid [row col]))))
+
+(defn grid-size "width*heigh size not including border" [grid]
+  (* (- (length grid) 2) (- (length (grid 0)) 2)))
+
+(defn print-grid [grid] (print (inner-grid->string grid)))
+
 (defn grid-clone-fill [grid value]
   "create a new grid, same shape as given one, filled with given value"
   (def width (length (grid 0)))
   (def height (length grid))
   (map (fn [i] (array/new-filled width value)) (range height)))
+
+(defn grid-clone [grid]
+  (seq [row :in grid] (array ;row)))
 
 # -- misc --
 
@@ -281,5 +321,9 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
   (loop [p :in (permutations (range n))]
     (pp p)))
 
+(defn median [values]
+  (get (sort (array ;values))
+       (/ (dec (length values)) 2)))
+(assert (= (median [3 2 1 4 7]) 3) "check median")
     
 
