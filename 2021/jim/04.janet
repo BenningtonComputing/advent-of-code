@@ -157,7 +157,7 @@
   (loop [number :in numbers]
     (mark-boards! number)
     (loop [id :in (indices boards)]
-      (if (and (not (in? id has-won)) (board-wins? (boards id)))
+      (if (and (not (in? has-won id)) (board-wins? (boards id)))
 	(do
 	  (array/push has-won id)
 	  (def score (final-score number (boards id)))

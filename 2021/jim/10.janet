@@ -73,10 +73,6 @@
    left-curly right-curly
    left-angle right-angle})
 
-(defn in? [data-struc key] (truthy? (in data-struc key)))
-(assert (in? open->close left-paren) "( in open->close")
-(assert (not (in? open->close right-paren)) ") not in open->close")
-
 (def points
   {right-paren 3
    right-bracket 57
@@ -160,11 +156,6 @@
   (loop [points :in (map complete-points (completion line))]
     (set result (+ points (* 5 result))))
   result)
-
-(defn median [values]
-  (get (sort (array ;values))
-       (/ (dec (length values)) 2)))
-(assert (= (median [3 2 1 4 7]) 3) "check median")
 
 (defn middle-score [lines] (median (map complete-score lines)))
 

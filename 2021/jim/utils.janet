@@ -92,11 +92,14 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 # --- data structures ---
 
 (defn map-table
-  " Given a function that produces [key value] pairs, collect into a table "
-  # THIS IMPLEMENTATION IS BUGGY - flatten will change interior key/value stuff.
-  # FIXME : change to an accumulator pattern, walking through pairs & updating 
-  [func values]
-  (table ;(flatten (map func values))))
+  " Given a function (func item)  that produces [key value], collect into table"
+  [func items]
+  (def result @{})
+  (loop [i :in items] (let [[key val] (func i)] (put result key val)))
+  result)
+
+(assert (deep= @{1 [1 1] 2 [2 2]}
+	       (map-table (fn [k] [k [k k]]) [1 2])) "check map-table")
 
 (defn indices "indices of an array" [values] (range (length values)))
 (assert (deep= (indices [4 5 6]) @[0 1 2]))
@@ -209,10 +212,19 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
     false))
 
 (defn in?
-  " true if x is in items "
-  # Also see (find predicate items &opt default)
-  [x items]
-  (not (nil? (index-of x items))))
+  " true if x is in array or tuple or struct or table"
+  [collection x]
+  (case (type collection)
+    :array (not (nil? (index-of x collection)))
+    :tuple (not (nil? (index-of x collection)))
+    :struct (in collection x)
+    :table (in collection x)
+    false))
+(assert (and
+	  (in? [0 1 2] 1)
+	  (in? @[0 1 2] 1)
+	  (in? {1 :one 2 :two} 1)
+	  (in? @{1 :one 2 :two} 1)) "check in?")
 
 (defn sign
   "1, 0, -1 for positive, zero, negative"
@@ -253,9 +265,27 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
   [factor [x y]]
   [ (* factor x) (* factor y) ])
 
+# -- graphs ---------
+
+(defn graph-add-edge "add edge [node1 node2] to graph" [graph [node1 node2]]
+  (if-not (in? graph node1)
+    (put graph node1 @[]))
+  (if-not (in? (graph node1) node2)
+    (array/push (graph node1) node2)))
+
+(defn edges->graph "make graph {node:[neighbors]} " [edges]
+  (def graph @{})
+  (loop [[node1 node2] :in edges]
+    (graph-add-edge graph [node1 node2])
+    (graph-add-edge graph [node2 node1]))
+  graph)
+
 # -- sets ---------
 
 (defn make-set "create a set" [values] (map-table (fn [x] [x true]) values))
+(defn set/add "add item to set" [s item] (put s item true))
+(defn set->array [s] (keys s))
+(defn set/clone [s] (make-set (keys s)))
 
 (defn to-struct [s] (if (table? s) (table/to-struct s) s))
 

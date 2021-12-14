@@ -26,15 +26,6 @@
 
 (def day9-text (slurp-input 9))
 
-(defn text->grid [text] (map line->digits (text->lines text)))
-(defn grid->string [grid]
-  (def result @"")
-  (loop [line :in grid]
-    (loop [digit :in line]
-      (buffer/push result (describe digit)))
-    (buffer/push result "\n"))
-  result)
-
 (def example-grid (add-border (text->grid example-text) 9))
 (def day9-grid (add-border (text->grid day9-text) 9))
 
