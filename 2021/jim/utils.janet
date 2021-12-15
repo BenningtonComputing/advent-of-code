@@ -212,17 +212,19 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
     false))
 
 (defn in?
-  " true if x is in array or tuple or struct or table"
+  " true if x is in array or tuple or struct or table or string"
   [collection x]
   (case (type collection)
     :array (not (nil? (index-of x collection)))
     :tuple (not (nil? (index-of x collection)))
+    :string (string/find x collection)
     :struct (in collection x)
     :table (in collection x)
     false))
 (assert (and
 	  (in? [0 1 2] 1)
 	  (in? @[0 1 2] 1)
+	  (in? "..ab.." "ab")
 	  (in? {1 :one 2 :two} 1)
 	  (in? @{1 :one 2 :two} 1)) "check in?")
 
@@ -286,6 +288,8 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 (defn set/add "add item to set" [s item] (put s item true))
 (defn set->array [s] (keys s))
 (defn set/clone [s] (make-set (keys s)))
+
+(defn unique [items] (set->array (make-set items)))
 
 (defn to-struct [s] (if (table? s) (table/to-struct s) s))
 
