@@ -202,6 +202,10 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 
 # -- misc --
 
+# (first items) is already defined, so
+(defn second [items] (get items 1))
+(defn third [items] (get items 2))
+
 (defn any
   " return true if any of (predicate value), else return false "
   # But see (truthy? x) and (any? pred vals)
