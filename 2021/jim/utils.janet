@@ -35,7 +35,7 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
   (filter-out-nil (map scan-number (string/split " " (collapse-space line)))))
 (deep= (line->numbers "1  2   3") @[1 2 3])
 
-(defn text->grid
+(defn text->grid-spacey
   " convert lines of text with spaces between numbers 
     to a grid (an array of arrays) of numbers "
   [text]
@@ -46,7 +46,7 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
    1  2   3
   12 13 101
 ``)
-(def test-grid (text->grid test-text-grid))
+(def test-grid (text->grid-spacey test-text-grid))
 (assert (deep= test-grid @[@[1 2 3] @[12 13 101]]))
 
 (defn string-delim->ints
@@ -72,6 +72,7 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 (assert (= (line->digits "123") [1 2 3]) "check line->numbers")
 
 (defn text->grid [text] (map line->digits (text->lines text)))
+
 (defn grid->string [grid]
   (def result @"")
   (loop [line :in grid]
@@ -88,6 +89,36 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
       (buffer/push result (describe digit)))
     (buffer/push result "\n"))
   result)
+
+(defn inner-grid->string-spacey [grid]
+  "convert grid of numbers to printable string, leaving out border, spaces between"
+  (def result @"")
+  (loop [line :in (slice grid 1 -2)]
+    (loop [digit :in (slice line 1 -2)]
+      (buffer/push result (string/format " %i" digit)))
+    (buffer/push result "\n"))
+  result)
+
+
+# -- 2D geometry --
+
+# Since I am using these points as keys in tables in 05.janet,
+# these functions need to return immutable tuples, not mutable arrays.
+
+(defn point/add
+  " vector 2D addition for points i.e. [x1 y1] and [x2 y2]"
+  [[x1 y1] [x2 y2]]
+  [ (+ x1 x2) (+ y1 y2) ])
+
+(defn point/subtract
+  " vector 2D subtraction for points i.e. [x1 y1] - [x2 y2]"
+  [[x1 y1] [x2 y2]]  
+  [ (- x1 x2) (- y1 y2) ])
+
+(defn point/scale
+  " scalar 2D multiplication i.e. (factor * [x y]) "
+  [factor [x y]]
+  [ (* factor x) (* factor y) ])
 
 # --- data structures ---
 
@@ -116,41 +147,46 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 (assert (deep= (array->pairs [1 2 3])
 	       @[[1 2] [1 3] [2 1] [2 3] [3 1] [3 2]]))
 
-(defn get2
-  " return value at given row and column of 2d grid i.e. array of array "
-  # But see get-in ; (get-in matrix [row col])
-  # DEPRECATED - use .get below
-  [grid row col]
-  ((grid row) col))
+(defn dict/find-min
+  "return [key value] with min value in dictionary"
+  [dict]
+  (var lowest-key nil)
+  (var lowest-value math/inf)
+  (loop [[key value] :pairs dict]
+    (if (< value lowest-value) (do (set lowest-key key)
+				   (set lowest-value value))))
+  [lowest-key lowest-value])
+(assert (= [:one 1] (dict/find-min {:two 2 :three 3 :one 1})) "check find-min")
 
-(assert (= (get2 test-grid 1 0) 12)) # [[1 2 3] [12 13 101]]
 
-(defn set2
-  " set 2d grid (i.e. array of arrays) at (row,column) to given value"
-  # But see (put-in ...) ; (put-in (matrix) [row col] value)
-  # DEPRECATED - use .put below  
-  [grid row col value]
-  (set ((grid row) col) value))
-
-(set2 test-grid 0 0 100)
-(assert (= (get2 test-grid 0 0) 100))
-
-# -- 2D vectors --
+# -- vectors & matrices --
 
 (defn .get [grid [row col]] (get-in grid [row col]))
 (defn .put [grid [row col] value] (put-in grid [row col] value))
 
-(defn .add "2d vector addition" [[row1 col1] [row2 col2]]
-  [(+ row1 row2) (+ col1 col2)])
-  
+(assert (= (.get test-grid [1 0]) 12)) # [[1 2 3] [12 13 101]]
+(.put test-grid [0 0] 100)
+(assert (= (.get test-grid [0 0]) 100))
+
+# TODO : a) implement .add : n-dimensional addition 
+#        b) ... and .add  should handle more than 2 args
+#        c) ditto for (.subtract .scale)
+#        d) implement inner (dot) product
+#        e) implement outer product
+
+#(defn .add "2d vector addition" [[row1 col1] [row2 col2]]
+#  [(+ row1 row2) (+ col1 col2)])
+
+# --grids & points --
+
 (def directions [[1 0] [0 1] [-1 0] [0 -1]])  # right down left up on grid
-(defn neighbors "4 neighbor points" [p] (map |(.add $ p) directions))
+(defn neighbors "4 neighbor points" [p] (map |(point/add $ p) directions))
 
 (def directions8 [[-1 -1] [-1 0] [-1 1]
 		  [ 0 -1]        [ 0 1]
                   [ 1 -1] [ 1 0] [ 1 1]])
 		  
-(defn neighbors8 "8 neighbor points" [p] (map |(.add $ p) directions8))
+(defn neighbors8 "8 neighbor points" [p] (map |(point/add $ p) directions8))
 
 (defn add-border
   "given a rectangular grid, add a border with given edge value"
@@ -163,39 +199,66 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
   (array/push result (array/new-filled n2 edge))
   result)
 
+(defn shape "return [n-rows n-cols]" [grid]
+  [(length grid) (length (grid 0))])
+
+(defn minus2 [x] (- x 2))
+
 # extremes of grid for looping ; assumes it has a border
-(defn .left [grid] 1)                        # index of left range in border
-(defn .right [grid] (dec (length (grid 0)))) # index of right range ditto
+(defn .left [grid] 1)                        # index of left range-to in border
+(defn .right [grid] (minus2 (length (grid 0)))) # index of right ranget- ditto
 (defn .top [grid] 1)
-(defn .bottom [grid] (dec (length grid)))
+(defn .bottom [grid] (minus2 (length grid)))
+
+(def test-grid-border (add-border test-grid 0))
+(defn in-grid?
+  "is point in grid? (assumes border; border not in grid)"
+  [grid [row col]]
+  (and (<= (.left grid) col) (<= col (.right grid))
+       (<= (.top grid) row) (<= row (.bottom grid))))
+(assert (in-grid? test-grid-border [1 1]) "check 1 in-grid?")
+(assert (in-grid? test-grid-border [2 3]) "check 2 in-grid?")
+(assert (not (in-grid? test-grid-border [1 0])) "check 3 in-grid?")
+(assert (not (in-grid? test-grid-border [0 1])) "check 4 in-grid?")
+(assert (not (in-grid? test-grid-border [3 3])) "check 5 in-grid?")
+
+(defn neighbors4-in-grid
+  "up to four adjacent neighboring points if in grid, assumes border"
+  [grid point]
+  (filter (fn [pt] (in-grid? grid pt)) (neighbors point)))
+(assert (deep= (neighbors4-in-grid test-grid-border [1 1]) @[[2 1] [1 2]]))
 
 (defn grid-map
   "apply (func grid [row col]) to points inside border; return result array"
   # assumes grid has a border; does not apply func to border values.
   [func grid]
   (def result @[])
-  (loop [row :range [(.top grid) (.bottom grid)]]
-    (loop [col :range [(.left grid) (.right grid)]]
+  (loop [row :range-to [(.top grid) (.bottom grid)]]
+    (loop [col :range-to [(.left grid) (.right grid)]]
       (array/push result (func grid [row col]))))
   result)
 
 (defn grid-loop
   "apply (func grid [row col]) to each point inside border."
   [func grid]
-  (loop [row :range [(.top grid) (.bottom grid)]]
-    (loop [col :range [(.left grid) (.right grid)]]
+  (loop [row :range-to [(.top grid) (.bottom grid)]]
+    (loop [col :range-to [(.left grid) (.right grid)]]
       (func grid [row col]))))
 
-(defn grid-size "width*heigh size not including border" [grid]
+(defn grid-size "width*height size not including border" [grid]
   (* (- (length grid) 2) (- (length (grid 0)) 2)))
 
 (defn print-grid [grid] (print (inner-grid->string grid)))
+(defn print-grid-spacey [grid] (print (inner-grid->string-spacey grid)))
+
+(defn grid-fill [shape value]
+  "create a new grid with given shape, filled with given value"
+  (def [height width] shape)
+  (map (fn [i] (array/new-filled width value)) (range height)))
 
 (defn grid-clone-fill [grid value]
   "create a new grid, same shape as given one, filled with given value"
-  (def width (length (grid 0)))
-  (def height (length grid))
-  (map (fn [i] (array/new-filled width value)) (range height)))
+  (grid-fill (shape grid) value))
 
 (defn grid-clone [grid]
   (seq [row :in grid] (array ;row)))
@@ -251,25 +314,6 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
   (buffer/push result ">")
   result)
 
-# -- 2D geometry --
-
-# Since I am sometimes using these points as keys in tables,
-# these functions need to return immutable tuples, not mutable arrays.
-
-(defn add-2d
-  " vector 2D addition for points i.e. [x1 y1] and [x2 y2]"
-  [[x1 y1] [x2 y2]]
-  [ (+ x1 x2) (+ y1 y2) ])
-
-(defn subtract-2d
-  " vector 2D subtraction for points i.e. [x1 y1] - [x2 y2]"
-  [[x1 y1] [x2 y2]]  
-  [ (- x1 x2) (- y1 y2) ])
-
-(defn scale-2d
-  " scalar 2D multiplication i.e. (factor * [x y]) "
-  [factor [x y]]
-  [ (* factor x) (* factor y) ])
 
 # -- graphs ---------
 

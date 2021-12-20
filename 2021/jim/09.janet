@@ -68,8 +68,8 @@
 
 (defn basins [grid]
   (def flows (grid-clone-fill grid 0))
-  (loop [row :range [(.top grid) (.bottom grid)]]
-    (loop [col :range [(.left grid) (.right grid)]]
+  (loop [row :range-to [(.top grid) (.bottom grid)]]
+    (loop [col :range-to [(.left grid) (.right grid)]]
       # visit each [row col] in grid
       (var here [row col])
       #(printf "looping; here is %j" here)

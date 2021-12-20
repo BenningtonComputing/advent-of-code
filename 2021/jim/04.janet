@@ -56,7 +56,7 @@
 #(print "-- raw boards --")
 #(printf "%M" text-boards)
 
-(var boards (map text->grid text-boards))
+(var boards (map text->grid-spacey text-boards))
 (print "-- first board --")
 (printf "%M" (boards 0))
 (print "-- last board --")
@@ -72,8 +72,8 @@
   [board number]
   (for row 0 n
     (for col 0 n
-      (if (= (get2 board row col) number)
-	(set2 board row col (mark number))))))
+      (if (= (.get board [row col]) number)
+	(.put board [row col] (mark number))))))
 
 #(print "mark 14 on board 0")
 #(mark-board! (boards 0) 14)
@@ -92,7 +92,7 @@
 (defn row-col-wins?
   "true if array of row-col positions are all marked"
   [row-cols board]
-  (all (fn [[row col]] (mark? (get2 board row col))) row-cols))
+  (all (fn [[row col]] (mark? (.get board [row col]))) row-cols))
 
 (print "winning rows and columns [row col] cells")
 (printf "%M" wins)
@@ -129,7 +129,7 @@
 (defn print-board [board]
   (for col 0 n
     (for row 0 n
-      (prinf "%8d" (get2 board row col)))
+      (prinf "%8d" (.get board [row col])))
     (prinf "\n")))
 
 (defn unmarked [board]
@@ -178,7 +178,7 @@
 
 # --- reset boards to initial position
 (printf "-------- resetting boards to original state -------")
-(set boards (map text->grid text-boards))
+(set boards (map text->grid-spacey text-boards))
 
 (def winners (play-all))
 (def [number0 winner0-id score0] (winners 0))

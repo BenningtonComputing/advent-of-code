@@ -1,0 +1,44 @@
+01.janet:(def day1 (map parse (text->lines (slurp-input 1))))
+02.janet:(def day2 (text->lines (slurp-input 2)))
+02.janet:(def test-lines (text->lines test-case))
+03.janet:(def day3 (text->lines (slurp-input 3)))
+03.janet:(def test-case (text->lines ``
+04.janet:(def numbers (string-delim->ints "," ((text->lines day4-raw) 0)))
+04.janet:(def text-boards (slice (string/split "\n\n" day4-raw) 1))
+04.janet:#(printf "%M" text-boards)
+04.janet:(var boards (map text->grid text-boards))
+04.janet:(set boards (map text->grid text-boards))
+05.janet:  (map parse-line (text->lines text)))
+06.janet:  (string-delim->ints "," (first (text->lines (slurp-input 6)))))
+08.janet:  (def parsings (map parse-line (text->lines text)))
+08.janet:  (map translate-line (text->lines text)))
+09.janet:(def example-grid (add-border (text->grid example-text) 9))
+09.janet:(def day9-grid (add-border (text->grid day9-text) 9))
+10.janet:(def day10-lines (text->lines (slurp-input 10)))
+11.janet:(def day11-grid-noborder (text->grid (slurp-input 11)))
+11.janet:(def example-grid-noborder (text->grid (string/trim
+11.janet:(def tinyexample-grid-noborder (text->grid (string/trim
+12.janet:(defn text->edges "return [(node1 node2) (node3 node4) ...]" [text]
+12.janet:       (text->lines text)))
+12.janet:(defn text->graph "return @{node neighbors ...}" [text]
+12.janet:  (edges->graph (text->edges text)))
+12.janet:(def example-graph (text->graph example-text))
+12.janet:(def larger-graph (text->graph larger-text))
+12.janet:(def day12-graph (text->graph day12-text))
+13.janet:  (loop [line :in (text->lines text)]
+14.janet:  (def lines (text->lines text))
+15.janet:  (add-border (text->grid text) math/inf))
+15.janet:#  (def day15-grid (add-border (text->grid (slurp-input 15)) 9))
+15.janet:#  (def original (text->GRID text))
+utils-old.janet:(defn text->lines
+utils-old.janet:(defn text->grid
+utils-old.janet:  (def lines (text->lines text))
+utils-old.janet:(def test-text-grid ``
+utils-old.janet:(def test-grid (text->grid test-text-grid))
+utils-old.janet:(defn text->grid [text] (map line->digits (text->lines text)))
+utils.janet:(defn text->lines
+utils.janet:(defn text->grid-spacey
+utils.janet:  (def lines (text->lines text))
+utils.janet:(def test-text-grid ``
+utils.janet:(def test-grid (text->grid-spacey test-text-grid))
+utils.janet:(defn text->grid [text] (map line->digits (text->lines text)))

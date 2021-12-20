@@ -77,10 +77,10 @@
   "given a vent line segment, return an array of the (x y) coords it covers"
   # calculated as (x1 y1)+(dx dy)*factor, where factor is (0 1 2 3 ...)
   [{:x1 x1 :y1 y1 :x2 x2 :y2 y2}]
-  (def dxdy (subtract-2d [x2 y2] [x1 y1]))
+  (def dxdy (point/subtract [x2 y2] [x1 y1]))
   (def unit (map sign dxdy))  # (1 1) or (1 0) or ... depending on direction
   (def size (inc (max ;(map math/abs dxdy)))) # length of line segment
-  (map (fn [i] (add-2d [x1 y1] (scale-2d i unit))) (range size)))
+  (map (fn [i] (point/add [x1 y1] (point/scale i unit))) (range size)))
 
 # vent->coords example :
 #   vent is {:x1 5 :y1 5 :x2 8 :y2 2}
