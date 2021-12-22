@@ -265,22 +265,25 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 
 # -- misc --
 
-# (first items) is already defined, so
-(defn second [items] (get items 1))
-(defn third [items] (get items 2))
+# (first items) is already defined, so why not second & third?
+(defmacro second [items] ~(get ,items 1))
+(defmacro third [items] ~(get ,items 2))
+(assert (= :2 (second [:1 :2 :3])) "check second")
+(assert (= :3 (third [:1 :2 :3])) "check third")
+
+(defmacro slice-n "extract n items from xs" [xs start n]
+  ~(slice ,xs ,start (+ ,start ,n)))
+(assert (= "456" (slice-n "012345678" 4 3)) "check slice-n")
 
 (defn any
-  " return true if any of (predicate value), else return false "
-  # But see (truthy? x) and (any? pred vals)
-  # ...better written as (truthy? (any? predicate values))
+  " return true if any of (predicate value) is true, else return false "
+  # Similar calling style to (any pred xs) and (all pred xs).
+  # Also see builtin (any? values) which is similar but without predicate.
   [predicate values]
-  (if (some predicate values)
-    true
-    false))
+  (truthy? (some predicate values)))
+(assert (= true (any (fn [x] (> x 3)) [1 2 4])) "check any")
 
-(defn in?
-  " true if x is in array or tuple or struct or table or string"
-  [collection x]
+(defn in? "true if x is in a collection" [collection x]
   (case (type collection)
     :array (not (nil? (index-of x collection)))
     :tuple (not (nil? (index-of x collection)))
@@ -288,12 +291,13 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
     :struct (in collection x)
     :table (in collection x)
     false))
-(assert (and
-	  (in? [0 1 2] 1)
-	  (in? @[0 1 2] 1)
-	  (in? "..ab.." "ab")
-	  (in? {1 :one 2 :two} 1)
-	  (in? @{1 :one 2 :two} 1)) "check in?")
+(assert (and                        # in? tests: 
+	  (in? [0 1 2] 1)           #   element in tuple ; O(n)
+	  (in? @[0 1 2] 1)          #   elmemnt in array ; O(n)
+	  (in? "..ab.." "ab")       #   substring in string
+	  (in? {1 :one 2 :two} 1)   #   key in struct
+	  (in? @{1 :one 2 :two} 1)  #   key in table
+	  "check in?"))
 
 (defn sign
   "1, 0, -1 for positive, zero, negative"
