@@ -99,7 +99,6 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
     (buffer/push result "\n"))
   result)
 
-
 # -- 2D geometry --
 
 # Since I am using these points as keys in tables in 05.janet,
@@ -248,7 +247,8 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 (defn grid-size "width*height size not including border" [grid]
   (* (- (length grid) 2) (- (length (grid 0)) 2)))
 
-(defn print-grid [grid] (print (inner-grid->string grid)))
+(defn print-grid [grid] (print (inner-grid->string grid))) # assumes border
+(defn print-grid-all [grid] (prin (grid->string grid)))  # assumes no border
 (defn print-grid-spacey [grid] (print (inner-grid->string-spacey grid)))
 
 (defn grid-fill [shape value]
@@ -317,7 +317,6 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
       (buffer/push result s)))
   (buffer/push result ">")
   result)
-
 
 # -- graphs ---------
 
