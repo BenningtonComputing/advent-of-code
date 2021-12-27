@@ -318,6 +318,18 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
   (buffer/push result ">")
   result)
 
+(defn string-replace-many [str replacements]
+  (def repls @[;replacements])
+  (var result str)
+  (while (> (length repls) 1)
+    (def [from to] [(first repls) (second repls)])
+    (array/remove repls 0 2)
+    (set result (string/replace-all from to result)))
+  result)
+(assert (= "aabbccc"
+	   (string-replace-many "a1b2c33" ["1" "a" "2" "b" "3" "c"])))
+
+
 # -- graphs ---------
 
 (defn graph-add-edge "add edge [node1 node2] to graph" [graph [node1 node2]]
