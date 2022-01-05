@@ -89,7 +89,7 @@
 # would give me a bit more room; (string/replace-all "[" "{" snail)
 
 (defn brace->curly [snail]
-  (string-replace-many snail ["[" "{" "]" "}"]))
+  (string/replace-all-many snail ["[" "{" "]" "}"]))
 
 (defn explode-at
   "return index where snail should explode, or false if it shouldn't"
@@ -268,7 +268,7 @@
 
 (defn snail/magnitude [snail]
   (def as-janet
-    (string-replace-many snail [(string/from-bytes open)  "(tripdub "
+    (string/replace-all-many snail [(string/from-bytes open)  "(tripdub "
 				(string/from-bytes close) ")"
 				(string/from-bytes comma) " "]))
   (eval-string as-janet))

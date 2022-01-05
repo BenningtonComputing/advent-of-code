@@ -330,6 +330,38 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
   (array/push result (array/new-filled n2 edge))
   result)
 
+(defn remove-border [grid]
+  (defn remove-ends [items] (array/slice items 1 -2)) # [1 2 3 4] => [2 3]
+  (map remove-ends (remove-ends grid)))
+(assert (deep= @[@[1 2] @[3 4]]
+               (remove-border [[0 0 0 0] [0 1 2 0] [0 3 4 0] [0 0 0 0]])))
+
+(defn add-n-borders 
+  "add n border layers"
+  [grid edge n]
+  (def one-border (add-border grid edge))
+  (if (one? n)
+    one-border
+    (add-n-borders one-border edge (dec n))))
+(assert (deep= @[@[0 0 0 0 0 0]
+                 @[0 0 0 0 0 0]
+                 @[0 0 1 2 0 0]
+                 @[0 0 3 4 0 0]
+                 @[0 0 0 0 0 0]
+                 @[0 0 0 0 0 0]]
+               (add-n-borders [[1 2] [3 4]] 0 2)))
+
+(defn remove-n-borders
+  "remove n border layers"
+  [grid n]
+  (def remove-one (remove-border grid))
+  (if (one? n)
+    remove-one
+    (remove-n-borders remove-one (dec n))))
+(assert (deep= @[@[1 2] @[3 4]]
+               (remove-n-borders
+                (add-n-borders [[1 2] [3 4]] 0 2) 2)))
+
 (defn minus2 [x] (- x 2))
 
 # extremes of grid for looping ; assumes it has a border
@@ -376,8 +408,8 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 (defn grid-size "width*height size not including border" [grid]
   (* (- (length grid) 2) (- (length (grid 0)) 2)))
 
-(defn print-grid [grid] (print (inner-grid->string grid))) # assumes border
-(defn print-grid-all [grid] (prin (grid->string grid)))  # assumes no border
+(defn print-grid-all [grid] (prin (grid->string grid)))    # do print border
+(defn print-grid [grid] (print (inner-grid->string grid))) # don't print border
 (defn print-grid-spacey [grid] (print (inner-grid->string-spacey grid)))
 
 (defn grid-fill [shape value]
@@ -439,6 +471,8 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 (defn positive? [x] (> 0 x))
 (defn not-empty? [xs] (not (empty? xs)))
 
+(defn double [x] (* 2 x))
+
 (defn table->stringy
   " turn table into '<table key:value key:value>"
   [t]
@@ -450,7 +484,9 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
   (buffer/push result ">")
   result)
 
-(defn string-replace-many [str replacements]
+(defn string/replace-all-many
+  "replace many substrings, all of  replacments [from1 to1 from2 to2 ...]"
+  [str replacements]
   (def repls @[;replacements])
   (var result str)
   (while (> (length repls) 1)
@@ -459,7 +495,7 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
     (set result (string/replace-all from to result)))
   result)
 (assert (= "aabbccc"
-	   (string-replace-many "a1b2c33" ["1" "a" "2" "b" "3" "c"])))
+	   (string/replace-all-many "a1b2c33" ["1" "a" "2" "b" "3" "c"])))
 
 
 # -- graphs ---------
