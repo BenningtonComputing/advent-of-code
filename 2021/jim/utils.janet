@@ -131,9 +131,20 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 (assert (deep= @{1 [1 1] 2 [2 2]}
 	       (map-table (fn [k] [k [k k]]) [1 2])) "check map-table")
 
-(defn indices "indices of an array" [values] (range (length values)))
-(assert (deep= (indices [4 5 6]) @[0 1 2]))
+(defn indices "indices of an array" [values] (tuple ;(range (length values))))
+(assert (= [0 1 2] (indices [4 5 6])))
 
+(defn last-index "last valid array index" [values] (dec (length values)))
+(assert (= 2 (last-index [4 5 6])))
+
+(defn index-pairs "all [i j] such that i<j, i<n, j<n" [n]
+  (sorted (seq [i :in (range n)
+		j :in (range n)
+		:when (< i j)]
+	       [i j])))
+(assert (deep= (index-pairs 4)
+	       @[[0 1] [0 2] [0 3] [1 2] [1 3] [2 3]]) "index-pairs")
+  
 (defn array->pairs
   " Given an array [1 2 3], return array of all combos of two 
     distinct elements [[1 2] [1 3] [2 1] [2 3] [3 1] [3 2] "
@@ -157,26 +168,147 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
   [lowest-key lowest-value])
 (assert (= [:one 1] (dict/find-min {:two 2 :three 3 :one 1})) "check find-min")
 
-
 # -- vectors & matrices --
 
-(defn .get [grid [row col]] (get-in grid [row col]))
-(defn .put [grid [row col] value] (put-in grid [row col] value))
+# An "ndarray" is an n-dimensional array or struct,
+# with the same same size interior parts,
+# for example [[[1 2] [3 4] [4 6]]] with shape [1 3 2].
+# Vectors are 1D ndarrays (mutable or not),
+# matrices are 2D ndarrays (mutable or not), and so on.
+
+(defn shape "return [n-rows n-cols ...]" [ndarray &opt _shape]
+  (default _shape [])
+  (case (type ndarray)
+    :nil _shape
+    :boolean _shape
+    :number _shape
+    :string _shape
+    :buffer _shape
+    :keyword _shape
+    :symbol _shape
+    :array (shape (ndarray 0) [;_shape (length ndarray)])
+    :tuple (shape (ndarray 0) [;_shape (length ndarray)])
+    nil))
+(assert (= [2]     (shape [0 0])) "shape 1D")
+(assert (= [3 2]   (shape [[0 0] [1 1] [2 2]])) "shape 2D")
+(assert (= [1 3 2] (shape [[[0 0] [1 1] [2 2]]])) "shape 3D")
+
+(defn dimension [ndarray] (length (shape ndarray)))
+(defn scalar? [ndarray] (= 0 (dimension ndarray)))
+(defn vector? [ndarray] (= 1 (dimension ndarray)))
+(defn matrix? [ndarray] (= 2 (dimension ndarray)))
+
+(assert (scalar? 13) "scalar")
+(assert (vector? [1 2 3]) "vector")
+(assert (matrix? [[1 0] [0 1]]) "matrix")
+
+(defn ndarray/type "one of [:scalar :vector :matrix nil]" [ndarray]
+  (case (dimension ndarray)
+    0 :scalar
+    1 :vector
+    2 :matrix
+    nil))
+
+# ndarray get and put (Note: can only put into mutable sub-arrays.)
+(defn .get [ndarray indices] (get-in ndarray indices))
+(defn .put [ndarray indices value] (put-in ndarray indices value))
 
 (assert (= (.get test-grid [1 0]) 12)) # [[1 2 3] [12 13 101]]
 (.put test-grid [0 0] 100)
 (assert (= (.get test-grid [0 0]) 100))
 
-# TODO : a) implement .add : n-dimensional addition 
-#        b) ... and .add  should handle more than 2 args
-#        c) ditto for (.subtract .scale)
-#        d) implement inner (dot) product
-#        e) implement outer product
+(assert (= 6 (.get [[[1 2] [3 4] [4 6]]] [0 2 1])) ".get 3D")
+(assert (deep= [[@[1 2] @[3 4] @[4 :*]]]
+	       (.put [[@[1 2] @[3 4] @[4 6]]] [0 2 1] :*)) ".put 3D")
 
-#(defn .add "2d vector addition" [[row1 col1] [row2 col2]]
-#  [(+ row1 row2) (+ col1 col2)])
+# inputs are 1D vectors (arrays or structs), output is array
+(defn .add1D [& item-lists] (map + ;item-lists))
+(defn .subtract1D [& item-lists] (map - ;item-lists))
+(defn .multiply1D [& item-lists] (map * ;item-lists))
+(defn .divide1D [& item-lists] (map / ;item-lists))
 
-# --grids & points --
+(assert (deep= (.add1D [1 2 3] [4 5 6] [7 8 9]) @[12 15 18]))
+(assert (deep= (.subtract1D [1 2 3] [4 5 6] [7 8 9]) @[-10 -11 -12]))
+(assert (deep= (.multiply1D [1 2 3] [4 5 6] [7 8 9]) @[28 80 162]))
+(assert (deep= (.divide1D [12 100 64] [4 10 8] [3 2 2]) @[1 5 4]))
+
+# dot product for 1D vectors
+(defn dot1D [vector1 vector2] (+ ;(.multiply1D vector1 vector2)))
+(assert (= 32 (dot1D [1 2 3] [4 5 6])) "vector dot product")
+
+(defn pythdiffsq
+  "square of pythagorean distance between two vectors"
+  [vector1 vector2]
+  (let [diff (.subtract1D vector1 vector2)]
+    (dot1D diff diff)))
+
+(defn manhattan
+  "manhattan distance between two vectors"
+  [vector1 vector2]
+  (+ ;(map math/abs (.subtract1D vector1 vector2))))
+(assert (= 30 (manhattan [1 2 3] [10 20 0])))
+
+# matrices
+(defn get-row [matrix row] (get matrix row))
+(defn get-col [matrix col] (map (fn [row-items] (get row-items col)) matrix))
+
+(assert (= [1 2] (get-row [[1 2] [3 4]] 0)) "get-row")
+(assert (deep= @[1 3] (get-col [[1 2] [3 4]] 0)) "get-col")
+
+(defn vector-dot-matrix [vector matrix]
+  (seq [i :range [0 (length matrix)]]
+       (dot1D vector (get-col matrix i))))
+
+(defn matrix-dot-vector [matrix vector]
+  (seq [i :range [0 (length (matrix 0))]]
+       (dot1D (get-row matrix i) vector)))
+
+(defn matrix-multiply [matrix1 matrix2]
+  (def [shape1 shape2] [(shape matrix1) (shape matrix2)])
+  (seq [row :range [0 (shape1 0)]]
+       (seq [col :range [0 (shape2 1)]]
+	    (dot1D (get-row matrix1 row) (get-col matrix2 col)))))
+
+(defn matrix-immutable [matrix]
+  (def _shape (shape matrix))
+  (tuple ;(seq [row :range [0 (_shape 0)]]
+               (tuple ;(seq [col :range [0 (_shape 1)]]
+                            (.get matrix [row col]))))))
+(assert (= [[1 2] [3 4]]
+           (matrix-immutable @[@[1 2] @[3 4]])) "matrix-immutable")
+
+(defn dot "dot product for matrices and/or vectors" [a b]
+  (case [(ndarray/type a) (ndarray/type b)]
+    [:vector :vector] (dot1D a b)
+    [:vector :matrix] (vector-dot-matrix a b)
+    [:matrix :vector] (matrix-dot-vector a b)
+    [:matrix :matrix] (matrix-multiply a b)))
+
+(assert (deep= @[17 39] (dot [[1 2] [3 4]] [5 6])) "dot matrix vector")
+(assert (deep= @[23 34] (dot [5 6] [[1 2] [3 4]])) "dot vector matrix")
+(assert (= 11 (dot [1 2] [3 4])) "dot vector vector")
+(assert (deep= @[@[58 64] @[139 154]]
+	   (dot [[1 2 3] [4 5 6]] [[7 8] [9 10] [11 12]])) "dot matrix matrix")
+# notes:
+#   (interleave [a b c] [d e f]) => [a d b e c f]
+#   (map + [1 2 3] [4 5 6]) => [(+ 1 2) (+ 2 5) (+ 3 6)]
+#   (reduce2 f [a b c]) =>  (f (f a b) c)
+	
+# TODO : outer product
+# TODO : general ndim dot prodct
+
+# -- rotations --
+
+# cube symmetries i.e. octahedral group
+# https://en.wikipedia.org/wiki/Octahedral_symmetry#Rotation_matrices
+# 24 3x3 matrices, all 3x3 permutation matrices with determinant 1,
+# so each row is one of [±1 0 0] [0 ±1 0] [0 0 ±1] with no two rows
+# the same and an even number of -1's.
+
+# -- grids & points --
+
+# TODO - some of these assume a border; clean up names and make explicit.
+#        ... and then propogate any changes into other ./*.janet files. (Ugh.)
 
 (def directions [[1 0] [0 1] [-1 0] [0 -1]])  # right down left up on grid
 (defn neighbors "4 neighbor points" [p] (map |(point/add $ p) directions))
@@ -197,9 +329,6 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
     (array/push result (array/concat @[edge] ;line edge)))
   (array/push result (array/new-filled n2 edge))
   result)
-
-(defn shape "return [n-rows n-cols]" [grid]
-  [(length grid) (length (grid 0))])
 
 (defn minus2 [x] (- x 2))
 
@@ -307,6 +436,9 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 	(> x 0)  1
 	         0))
 
+(defn positive? [x] (> 0 x))
+(defn not-empty? [xs] (not (empty? xs)))
+
 (defn table->stringy
   " turn table into '<table key:value key:value>"
   [t]
@@ -349,7 +481,9 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 
 (defn make-set "create a set" [values] (map-table (fn [x] [x true]) values))
 (defn set/add "add item to set" [s item] (put s item true))
+(defn set/remove "remove item from set" [s item] (put s item nil))
 (defn set->array [s] (keys s))
+(defn set/members [s] (keys s))
 (defn set/clone [s] (make-set (keys s)))
 
 (defn unique [items] (set->array (make-set items)))
@@ -364,6 +498,13 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 (assert (member? (make-set [:b :a]) :a) "member? test")
 
 (defn union "union of two sets" [s1 s2] (merge s1 s2))
+
+(defn intersection "intersection of two sets" [s1 s2]
+  (make-set (filter (fn [k] (member? s2 k)) (keys s1))))
+(assert (let [s123 (make-set [1 2 3])
+	      s23  (make-set [2 3])
+	      s234 (make-set [2 3 4])]
+	  (sets=? (intersection s123 s234) s23)) "intersection test")
 
 (defn difference "difference of two sets" [s1 s2]
   (make-set (filter (fn [k] (not (member? s2 k))) (keys s1))))
