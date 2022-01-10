@@ -2,6 +2,15 @@
 
 utility functions for advent of code 2021
 
+Notes:
+
+ * spork   : a utility library that includes regex/match ; (use spork)
+ * set     : I have some of my own set datastructure functions here, 
+             but there is also a set package that I could install and use instead;
+             see https://github.com/MikeBeller/janet-set
+ * stringx : https://github.com/yumaikas/janet-stringx/blob/main/stringx.janet
+             includes (nth string n) returns n'th char as length-1 string
+
 Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 ``
 
@@ -432,13 +441,26 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 (assert (= :2 (second [:1 :2 :3])) "check second")
 (assert (= :3 (third [:1 :2 :3])) "check third")
 
+(defn array/pop0 "pop from left of array" [items value]
+  # Note that this is much slower than array/pop which pops the right end.
+  (def result (first items))
+  (array/remove items 0)
+  result)
+
+(defn array/push0 "push onto left of array" [items & values]
+  # This is much slower than array/push which pushes onto the right end.
+  (array/insert items 0 ;values))
+
+(defn distinct-freeze "freeze each to force immutable; keep uniques" [items]
+  (distinct (map freeze items)))
+
 (defmacro slice-n "extract n items from xs" [xs start n]
   ~(slice ,xs ,start (+ ,start ,n)))
 (assert (= "456" (slice-n "012345678" 4 3)) "check slice-n")
 
 (defn any
   " return true if any of (predicate value) is true, else return false "
-  # Similar calling style to (any pred xs) and (all pred xs).
+  # Similar calling style to (all pred xs).
   # Also see builtin (any? values) which is similar but without predicate.
   [predicate values]
   (truthy? (some predicate values)))
@@ -574,7 +596,7 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 
 # -- counting ----
 
-# from https://github.com/MikeBeller/janet-cookbook#generators
+# straight from https://github.com/MikeBeller/janet-cookbook#generators
 (defn swap [a i j]
   (def t (a i))
   (put a i (a j))
