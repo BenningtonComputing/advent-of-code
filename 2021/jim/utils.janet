@@ -435,6 +435,11 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 
 # -- misc --
 
+(defn string/nth "nth letter in string as a string"
+  [letters n] (slice letters n (inc n)))
+(assert (= (string/nth "abc" 1) "b"))
+#(string/from-bytes (letters n)))
+
 # (first items) is already defined, so why not second & third?
 (defmacro second [items] ~(get ,items 1))
 (defmacro third [items] ~(get ,items 2))
