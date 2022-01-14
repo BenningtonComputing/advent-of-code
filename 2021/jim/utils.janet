@@ -436,9 +436,17 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 # -- misc --
 
 (defn string/nth "nth letter in string as a string"
-  [letters n] (slice letters n (inc n)))
-(assert (= (string/nth "abc" 1) "b"))
-#(string/from-bytes (letters n)))
+  # could also express as (string/from-bytes (letters n)))
+  [n letters] (slice letters n (inc n)))
+(assert (= (string/nth 1 "abc") "b"))
+
+(defn nth [n items]
+  (case (type items)
+    :tuple (items n)
+    :array (items n)
+    :string (string/nth n items)
+    :buffer (string/nth n items)
+    nil))
 
 # (first items) is already defined, so why not second & third?
 (defmacro second [items] ~(get ,items 1))
@@ -470,6 +478,11 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
   [predicate values]
   (truthy? (some predicate values)))
 (assert (= true (any (fn [x] (> x 3)) [1 2 4])) "check any")
+
+# I also find myself wanting to call (all .... ) and (some ...)
+# without the predicate, so :
+(defn all? [args] (all identity args))
+(defn some? [args] (some identity args))
 
 (defn in? "true if x is in a collection" [collection x]
   (case (type collection)
