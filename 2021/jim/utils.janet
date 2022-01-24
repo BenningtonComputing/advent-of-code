@@ -184,6 +184,9 @@ Jim Mahoney |  cs.bennington.college | MIT License | Dec 2021
 # for example [[[1 2] [3 4] [4 6]]] with shape [1 3 2].
 # Vectors are 1D ndarrays (mutable or not),
 # matrices are 2D ndarrays (mutable or not), and so on.
+#
+#   [ [1 2 3]
+#     [4 5 6] ]    has shape  [2 3]
 
 (defn shape "return [n-rows n-cols ...]" [ndarray &opt _shape]
   (default _shape [])

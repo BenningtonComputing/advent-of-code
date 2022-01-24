@@ -424,14 +424,14 @@ the start.
 (defn apod [state [x y]] ((state :at) [x y]))
 (assert (= :B (apod example2-state [2 1])) "check apod")
 
-(defn empty? [state [x y]] (= ((state :at) [x y]) :.))
-(assert (empty? testy1-state [2 0]))
-(assert (empty? testy1-state [2 2]))
-(assert (not (empty? testy1-state [0 0])))
-(assert (not (empty? testy1-state [4 3])))
+(defn empty-state? [state [x y]] (= ((state :at) [x y]) :.))
+(assert (empty-state? testy1-state [2 0]))
+(assert (empty-state? testy1-state [2 2]))
+(assert (not (empty-state? testy1-state [0 0])))
+(assert (not (empty-state? testy1-state [4 3])))
 
 (defn top-in-room [state roomx]
-  (def index (find |(not (empty? state [roomx $])) roomys))
+  (def index (find |(not (empty-state? state [roomx $])) roomys))
   (if index
     [roomx index]
     nil))
@@ -440,7 +440,7 @@ the start.
 (assert (nil? (top-in-room testy4-state 2)))
 
 (defn top-empty [state roomx]
-  (def index (find |(empty? state [roomx $]) (reverse roomys)))
+  (def index (find |(empty-state? state [roomx $]) (reverse roomys)))
   (if index
     [roomx index]
     nil))
@@ -465,11 +465,11 @@ the start.
   (def [lowx highx] [(min x1 x2) (max x1 x2)])
   (def roomy (max y1 y2))
   (def roomx (if (= roomy y1) x1 x2))
-  (and (not (empty? state [x1 y1]))
+  (and (not (empty-state? state [x1 y1]))
        (if (= y1 hally) (= (apod state [x1 y1]) (home x2)) true)
-       (empty? state [x2 y2])
-       (all |(empty? state [$ hally]) (range (inc lowx) highx))
-       (all |(empty? state [roomx $]) (range 1 roomy))))
+       (empty-state? state [x2 y2])
+       (all |(empty-state? state [$ hally]) (range (inc lowx) highx))
+       (all |(empty-state? state [roomx $]) (range 1 roomy))))
 (assert (can-move? testy2-state [9 0] [2 3]))
 (assert (not (can-move? testy1-state [0 0] [2 1])))
 (assert (can-move? testy4-state [7 0] [2 4]) "can-move? test4 A to bottom")
