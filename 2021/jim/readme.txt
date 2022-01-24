@@ -54,3 +54,9 @@ Janet code examples :
 And checkout these builtins :
   loop, seq, generate, accumulate, reduce, map, filter, ...
 
+---------------------
+
+Finished all 25 on Jan 23 2022, with the janet language.
+Interesting ... but definitely some "gotchas" here and there.
+
+
